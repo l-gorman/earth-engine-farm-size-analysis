@@ -1,0 +1,38 @@
+
+// Getting Data -----------------------------------------------
+// Find country codes here:
+// https://data.apps.fao.org/catalog/dataset/gaul-codes/resource/cfdaf156-26b9-46c2-aab2-eb437fc16622
+
+// Countries of Interest 
+// Burkina Faso - 42
+// Ethiopia - 79
+// Ghana - 94
+// Kenya - 133
+// Mali - 155
+// Nigeria - 182 
+// Rwanda - 205
+// Tanzania - 257
+
+var fao_level_2 = ee.FeatureCollection("FAO/GAUL/2015/level2");
+var fao_level_1 = ee.FeatureCollection("FAO/GAUL/2015/level1");
+var fao_level_1 = fao_level_1.filter(ee.Filter.eq('ADM0_CODE',2))
+
+
+
+print(fao_level_1.filter(ee.Filter.eq('ADM0_CODE',2)))
+
+// Styling Layers
+var styleParams = {
+  fillColor: 'b5ffb4',
+  color: '00909F',
+  width: 1.0,
+};
+
+fao_level_2 = fao_level_2.style(styleParams);
+fao_level_1 = fao_level_1.style(styleParams);
+
+
+// Creating Map
+// Map.setCenter(25, 0, 4);
+// Map.addLayer(fao_level_2, {}, 'Second Level Administrative Units');
+Map.addLayer(fao_level_1, {}, 'First Level Administrative Units');
