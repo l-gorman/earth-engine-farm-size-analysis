@@ -62,7 +62,7 @@ var point_count_per_feature = function(
     var indexes = ee.List.sequence(0, ee.Number(keys.length()).subtract(1), 1)
     
     var pixel_ratios = indexes.map(function(index){
-      return(values.get(index)/pixel_count[band])
+      return(ee.Number(values.get(index))/ee.Number(pixel_count[band]))
     })
 
     
