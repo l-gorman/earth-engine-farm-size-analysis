@@ -27,6 +27,8 @@
 
 # Useful Links
 
+* [GEE Best practices](https://developers.google.com/earth-engine/guides/best_practices#reduceregion-vs.-reduceregions-vs.-for-loop)
 * [Data Catalog](https://developers.google.com/earth-engine/datasets/catalog)
 * [Using Git with Earth Engine](https://eodatascience.com/Newsroom/Technical-blog-Managing-Google-Earth-Engine-repos)
 * [Modular Earth-Engine Code](https://medium.com/google-earth/making-it-easier-to-reuse-code-with-earth-engine-script-modules-2e93f49abb13)
+* [Extensive GEE course](https://courses.spatialthoughts.com/end-to-end-gee.html)
