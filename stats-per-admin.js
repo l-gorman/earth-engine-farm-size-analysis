@@ -61,8 +61,12 @@ var point_count_per_feature = function(
     var values =  ee.Dictionary(pixel_frequency[band]).values()
     var indexes = ee.List.sequence(0, ee.Number(keys.length()).subtract(1), 1)
     
+    
     var pixel_ratios = indexes.map(function(index){
-      return(ee.Number(values.get(index))/ee.Number(pixel_count[band]))
+      var value = ee.Number(values.get(index))
+      var count = ee.Number(pixel_count[band])
+      var ratio = ee.Number(value).divide(count)
+      return(ratio)
     })
 
     
@@ -77,14 +81,29 @@ var point_count_per_feature = function(
     feature_information = feature_information.set('scale', scale)
     feature_information = feature_information.set('maxPixels', maxPixels)
     feature_information = feature_information.set('pixelRatios', pixel_ratios)
-
-
     
-    
-    
-    var result = ee.Feature(
+    var featureCollection = indexes.map(function(index){
+      var new_dictionary = feature_information
+      new_dictionary = new_dictionary.set('variable', 'land_cover_class')
+      new_dictionary = new_dictionary.set('band', keys.get(index))
+      new_dictionary = new_dictionary.set('value', pixel_ratios.get(index))
+      
+      var subfeature = ee.Feature(
       feature.geometry(),
-      feature_information
+      new_dictionary
+      )
+      
+      return(subfeature)
+
+      
+    })
+
+
+    
+    
+    
+    var result = ee.FeatureCollection(
+      featureCollection
       )
     
     return(result)
