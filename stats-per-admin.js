@@ -23,7 +23,7 @@ we need to make a nested function.
  
 // Outer function with arguments
 var point_count_per_feature = function(
-  reducedImageCollection,
+  imageCollection,
   band,
   dateStart,
   dateEnd,
@@ -33,13 +33,13 @@ var point_count_per_feature = function(
   // Inner function which takes the feature
   var feature_collection_mapping = function (feature){
     
-    var image_collection = reducedImageCollection.
+    var image_collection = imageCollection.
                         // Select the band
                         select(band).
                         // Filter Date
                         filterDate(dateStart, dateEnd)
                         
-
+    var image = image_collection.mode()
 
     // Get the modal band counts for that region
     var pixel_frequency = image.reduceRegion({
@@ -62,8 +62,7 @@ var point_count_per_feature = function(
     var indexes = ee.List.sequence(0, ee.Number(keys.length()).subtract(1), 1)
     
     var pixel_ratios = indexes.map(function(index){
-      return(values.get(index))
-
+      return(values.get(index)/pixel_count[band])
     })
 
     
@@ -77,6 +76,8 @@ var point_count_per_feature = function(
     feature_information = feature_information.set('dateEnd', dateEnd)
     feature_information = feature_information.set('scale', scale)
     feature_information = feature_information.set('maxPixels', maxPixels)
+    feature_information = feature_information.set('pixelRatios', pixel_ratios)
+
 
     
     
@@ -94,7 +95,7 @@ var point_count_per_feature = function(
 }
 
 var mapped_feature = fao_level_1.map(point_count_per_feature(
-  ee.ImageCollection('MODIS/006/MCD12Q1').mode(),//imageCollection
+  ee.ImageCollection('MODIS/006/MCD12Q1'),//imageCollection
   "LC_Type1",//band
   '2018-12-31',//dateStart
   '2020-01-02',//dateEnd
