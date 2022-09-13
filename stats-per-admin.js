@@ -23,7 +23,7 @@ we need to make a nested function.
  
 // Outer function with arguments
 var point_count_per_feature = function(
-  imageCollection,
+  reducedImageCollection,
   band,
   dateStart,
   dateEnd,
@@ -32,14 +32,51 @@ var point_count_per_feature = function(
   ){
   // Inner function which takes the feature
   var feature_collection_mapping = function (feature){
-    var adm0_code = feature.get('ADM0_CODE')
     
+    var image_collection = reducedImageCollection.
+                        // Select the band
+                        select(band).
+                        // Filter Date
+                        filterDate(dateStart, dateEnd)
+                        
+
+
+    // Get the modal band counts for that region
+    var pixel_frequency = image.reduceRegion({
+            reducer:ee.Reducer.frequencyHistogram(),
+            geometry:geometry,
+            scale:30,
+            maxPixels:40e9
+        }).getInfo()
+        
+    // Get the total pixel counts for that region
+    var pixel_count = image.reduceRegion({
+            reducer:ee.Reducer.count(),
+            geometry:geometry,
+            scale:30,
+            maxPixels:40e9
+        }).getInfo()
+        
+    var keys = ee.Dictionary(pixel_frequency[band]).keys()
+    var values =  ee.Dictionary(pixel_frequency[band]).values()
+    var indexes = ee.List.sequence(0, ee.Number(keys.length()).subtract(1), 1)
+    
+    var pixel_ratios = indexes.map(function(index){
+      return(values.get(index))
+
+    })
+
+    
+    
+    // var adm0_code = feature.get('ADM0_CODE')
     var feature_information = feature.toDictionary()
     
     
     // How to add new information
     feature_information = feature_information.set('dateStart', dateStart)
-    feature_information = feature_information.set('dateStart', dateStart)
+    feature_information = feature_information.set('dateEnd', dateEnd)
+    feature_information = feature_information.set('scale', scale)
+    feature_information = feature_information.set('maxPixels', maxPixels)
 
     
     
@@ -56,7 +93,14 @@ var point_count_per_feature = function(
   return(feature_collection_mapping)
 }
 
-var mapped_feature = fao_level_1.map(point_count_per_feature('randome new thing'))
+var mapped_feature = fao_level_1.map(point_count_per_feature(
+  ee.ImageCollection('MODIS/006/MCD12Q1').mode(),//imageCollection
+  "LC_Type1",//band
+  '2018-12-31',//dateStart
+  '2020-01-02',//dateEnd
+  30,//scale
+  40e9//maxPixels
+  ))
 print("Printing mapped feature")
 
 print(mapped_feature)
@@ -78,63 +122,37 @@ var polygon_categories_hist_single_geometry = function(
   }
   
 
-var band="LC_Type1";
-var dateStart='2018-12-31';
-var dateEnd='2020-01-02';
-var imageCollection = ee.ImageCollection('MODIS/006/MCD12Q1');
-var scale = 30;
-var maxPixels = 40e9;
 
 
 
 
-var image_collection = imageCollection.
-                        // Select the band
-                        select(band).
-                        // Filter Date
-                        filterDate(dateStart, dateEnd)
 
-// Get the mode over the date period for that collection
-var image = image_collection.mode()
 
-// Get the modal band counts for that region
-var pixel_frequency = image.reduceRegion({
-        reducer:ee.Reducer.frequencyHistogram(),
-        geometry:geometry,
-        scale:30,
-        maxPixels:40e9
-    }).getInfo()
-    
-// Get the total pixel counts for that region
-var pixel_count = image.reduceRegion({
-        reducer:ee.Reducer.count(),
-        geometry:geometry,
-        scale:30,
-        maxPixels:40e9
-    }).getInfo()
+
+
     
   
-var keys = ee.Dictionary(pixel_frequency[band]).keys()
-var values =  ee.Dictionary(pixel_frequency[band]).values()
-var indexes = ee.List.sequence(0, ee.Number(keys.length()).subtract(1), 1)
+// var keys = ee.Dictionary(pixel_frequency[band]).keys()
+// var values =  ee.Dictionary(pixel_frequency[band]).values()
+// var indexes = ee.List.sequence(0, ee.Number(keys.length()).subtract(1), 1)
 
-print(keys)
-print(values.get(1))
-print(indexes)
+// print(keys)
+// print(values.get(1))
+// print(indexes)
 
-print(pixel_count[band])
-
-
-var pixel_ratio = keys.map(function(key) {
-  return values[key]/pixel_count[band];
-});
-print(pixel_ratio)
+// print(pixel_count[band])
 
 
-var result = {
-  "class":keys,
-  "pixel_coverage":pixel_ratio
-}
+// var pixel_ratio = keys.map(function(key) {
+//   return values[key]/pixel_count[band];
+// });
+// print(pixel_ratio)
+
+
+// var result = {
+//   "class":keys,
+//   "pixel_coverage":pixel_ratio
+// }
 
 
 
