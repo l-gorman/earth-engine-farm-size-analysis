@@ -21,7 +21,7 @@ To map overfeatures, and past arguments,
 we need to make a nested function.
  */
  
-// Outer function with arguments
+//Outer function with arguments
 var point_count_per_feature = function(
   imageCollection,
   band,
@@ -33,82 +33,87 @@ var point_count_per_feature = function(
   // Inner function which takes the feature
   var feature_collection_mapping = function (feature){
     
-    var image_collection = imageCollection.
-                        // Select the band
-                        select(band).
-                        // Filter Date
-                        filterDate(dateStart, dateEnd)
-                        
-    var image = image_collection.mode()
-    // var geometry = feature.geometry()
 
-    // Get the modal band counts for that region
-    var pixel_frequency = image.reduceRegion({
-            reducer:ee.Reducer.frequencyHistogram(),
-            geometry:feature.geometry(),
-            scale:30,
-            maxPixels:40e9
-        }).getInfo()
+  var imageCollection =ee.ImageCollection('MODIS/006/MCD12Q1')//imageCollection
+  var band = "LC_Type1"//band
+  var dateStart = '2018-12-31'//dateStart
+  var dateEnd = '2020-01-02'//dateEnd
+  var scale = 30//scale
+  var maxPixels = 40e9//maxPixels    
+
+  var image_collection = imageCollection.
+                      // Select the band
+                      select(band).
+                      // Filter Date
+                      filterDate(dateStart, dateEnd)
+                      
+  var image = image_collection.mode()
+  // var geometry = feature.geometry()
+  
+  var reducer =  ee.Reducer.frequencyHistogram().combine({
+    reducer2: ee.Reducer.count(),
+    sharedInputs: true
+  })
+
+  // Get the modal band counts for that region
+  var pixel_frequency = image.reduceRegion({
+            reducer:reducer,
+            geometry:geometry,
+            scale:500
+        })//.getInfo()
         
-    // Get the total pixel counts for that region
-    var pixel_count = image.reduceRegion({
-            reducer:ee.Reducer.count(),
-            geometry:feature.geometry(),
-            scale:30,
-            maxPixels:40e9
-        }).getInfo()
-        
-    var keys = ee.Dictionary(pixel_frequency[band]).keys()
-    var values =  ee.Dictionary(pixel_frequency[band]).values()
-    var indexes = ee.List.sequence(0, ee.Number(keys.length()).subtract(1), 1)
+  var pixel_counts = ee.Feature(
+       feature.geometry(),
+       pixel_frequency
+       )
+       
+
+
+
+
     
-    
-    var pixel_ratios = indexes.map(function(index){
-      var value = ee.Number(values.get(index))
-      var count = ee.Number(pixel_count[band])
-      var ratio = ee.Number(value).divide(count)
-      return(ratio)
-    })
+
 
     
     
     // var adm0_code = feature.get('ADM0_CODE')
     var feature_information = feature.toDictionary()
-    // var geometry = feature.geometry();
+    var pixel_information = pixel_counts.toDictionary()
+    // // var geometry = feature.geometry();
     
-    // Add new information to the dictionary
-    feature_information = feature_information.set('dateStart', dateStart)
-    feature_information = feature_information.set('dateEnd', dateEnd)
-    feature_information = feature_information.set('scale', scale)
-    feature_information = feature_information.set('maxPixels', maxPixels)
-    feature_information = feature_information.set('pixelRatios', pixel_ratios)
+    // // Add new information to the dictionary
+    feature_information = feature_information.set('dateStart', dateStart);
+    feature_information = feature_information.set('dateEnd', dateEnd);
+    feature_information = feature_information.set('scale', scale);
+    feature_information = feature_information.set('maxPixels', maxPixels);
+    feature_information = feature_information.set('pixel_info', pixel_information);
     
-    var featureCollection = indexes.map(function(index){
-      var new_dictionary = feature_information
-      new_dictionary = new_dictionary.set('variable', 'land_cover_class')
-      // new_dictionary = new_dictionary.set('band', keys.get(index))
-      // new_dictionary = new_dictionary.set('value', pixel_ratios.get(index))
+    // var featureCollection = indexes.map(function(index){
+    //   var new_dictionary = feature_information
+    //   new_dictionary = new_dictionary.set('variable', 'land_cover_class')
+    //   // new_dictionary = new_dictionary.set('band', keys.get(index))
+    //   // new_dictionary = new_dictionary.set('value', pixel_ratios.get(index))
       
-      var subfeature = ee.Feature(
-      feature.geometry(),
-      new_dictionary
-      )
+    //   var subfeature = ee.Feature(
+    //   feature.geometry(),
+    //   new_dictionary
+    //   )
       
-      return(subfeature)
+    //   return(subfeature)
 
       
-    })
+    // })
 
-    var feature_collection = ee.FeatureCollection(
-      featureCollection
-      )
+    // var feature_collection = ee.FeatureCollection(
+    //   featureCollection
+    //   )
     
-    return(feature_collection)
+     return(feature_collection)
     
     
-  }
-  return(feature_collection_mapping)
-}
+   }
+   return(feature_collection_mapping)
+ }
 
 var mapped_feature = fao_level_1.map(point_count_per_feature(
   ee.ImageCollection('MODIS/006/MCD12Q1'),//imageCollection
@@ -122,12 +127,6 @@ var mapped_feature = fao_level_1.map(point_count_per_feature(
 print(mapped_feature)
 
 
-// var imageCollection= ee.ImageCollection('MODIS/006/MCD12Q1')//imageCollection
-// var band = "LC_Type1"//band
-// var dateStart = '2018-12-31'//dateStart
-// var dateEnd = '2020-01-02'//dateEnd
-// var scale = 500 //scale
-// var maxPixels = 40e9 //maxPixels
 
 
 // var image_collection = imageCollection.
