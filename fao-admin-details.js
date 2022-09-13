@@ -1,13 +1,13 @@
 // Getting Data -----------------------------------------------
 
-var fao_level_1 = ee.FeatureCollection("FAO/GAUL/2015/level1"); 
-var fao_level_2 = ee.FeatureCollection("FAO/GAUL/2015/level2");
+var fao_level_1_fc = ee.FeatureCollection("FAO/GAUL/2015/level1"); 
+var fao_level_2_fc = ee.FeatureCollection("FAO/GAUL/2015/level2");
 
 var filter = ee.Filter.inList('ADM0_CODE', [42,79, 94, 133, 155, 182, 205, 257, 253]) // Admin codes
 
 
-var fao_level_1 = fao_level_1.filter(filter);
-var fao_level_2 = fao_level_2.filter(filter);
+var fao_level_1_fc = fao_level_1_fc.filter(filter);
+var fao_level_2_fc = fao_level_2_fc.filter(filter);
 
 
 
@@ -22,19 +22,22 @@ var styleParams = {
 
 
 
-fao_level_2 = fao_level_2.style(styleParams);
-fao_level_1 = fao_level_1.style(styleParams);
+var fao_level_2_styled = fao_level_2_fc.style(styleParams);
+var fao_level_1_styled = fao_level_1_fc.style(styleParams);
 
 
 
 // // Creating Map
 Map.setCenter(25, 0, 4);
-Map.addLayer(fao_level_2, {}, 'Second Level Administrative Units');
-Map.addLayer(fao_level_1, {}, 'First Level Administrative Units');
+Map.addLayer(fao_level_2_styled, {}, 'Second Level Administrative Units');
+Map.addLayer(fao_level_1_styled, {}, 'First Level Administrative Units');
 
 //Example of Writing table to Google Drive
+
+print(fao_level_1_fc)
+
 Export.table.toDrive({
-  collection: ee.FeatureCollection(fao_level_1),
+  collection: fao_level_1_fc,
   description:'fao-level-1-details',
   fileFormat: 'csv',
   folder: 'earth-engine-outputs/farm-size-analysis',
@@ -43,7 +46,7 @@ Export.table.toDrive({
 });
 
 Export.table.toDrive({
-  collection: ee.FeatureCollection(fao_level_2),
+  collection: fao_level_2_fc,
   description:'fao-level-2-details',
   fileFormat: 'csv',
   folder: 'earth-engine-outputs/farm-size-analysis',
