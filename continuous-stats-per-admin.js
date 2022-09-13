@@ -39,7 +39,7 @@ var stats_per_region =function(
       var reduced_region = dataset.reduceRegion({
               reducer:ee.Reducer.mean(),
               geometry:feature.geometry(),
-              scale:500,
+              scale:20000,
               maxPixels:40e9
           })
       
