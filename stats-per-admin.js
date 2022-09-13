@@ -66,7 +66,7 @@ var pixel_count = image.reduceRegion({
   
 var keys = ee.Dictionary(pixel_frequency[band]).keys()
 var values =  ee.Dictionary(pixel_frequency[band]).values()
-var indexes = ee.List.sequence(0, ee.Number(keys.length()).subtract(1), step)
+var indexes = ee.List.sequence(0, ee.Number(keys.length()).subtract(1), 1)
 
 print(keys)
 print(values.get(1))
