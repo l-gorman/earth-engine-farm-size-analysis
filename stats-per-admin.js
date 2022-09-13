@@ -9,10 +9,59 @@ var fao_level_2 = ee.FeatureCollection("FAO/GAUL/2015/level2");
 var filter = ee.Filter.eq('ADM1_CODE', 1927); //2579
 
 var fao_level_1 = fao_level_1.filter(filter);
+print(fao_level_1.columns)
 
 print(fao_level_1);
 
 var geometry = fao_level_1.geometry()
+
+
+/* 
+To map overfeatures, and past arguments, 
+we need to make a nested function.
+ */
+ 
+// Outer function with arguments
+var point_count_per_feature = function(
+  imageCollection,
+  band,
+  dateStart,
+  dateEnd,
+  scale,
+  maxPixels
+  ){
+  // Inner function which takes the feature
+  var feature_collection_mapping = function (feature){
+    var adm0_code = feature.get('ADM0_CODE')
+    
+    var feature_information = feature.toDictionary()
+    
+    
+    // How to add new information
+    feature_information = feature_information.set('dateStart', dateStart)
+    feature_information = feature_information.set('dateStart', dateStart)
+
+    
+    
+    
+    var result = ee.Feature(
+      feature.geometry(),
+      feature_information
+      )
+    
+    return(result)
+    
+    
+  }
+  return(feature_collection_mapping)
+}
+
+var mapped_feature = fao_level_1.map(point_count_per_feature('randome new thing'))
+print("Printing mapped feature")
+
+print(mapped_feature)
+
+
 
 
 // Categorical Image Collections
@@ -35,6 +84,7 @@ var dateEnd='2020-01-02';
 var imageCollection = ee.ImageCollection('MODIS/006/MCD12Q1');
 var scale = 30;
 var maxPixels = 40e9;
+
 
 
 
