@@ -1,3 +1,50 @@
+/*
+
+Calculate the land-cover classification
+proportions for each FAO subnational
+unit.
+
+Outline of procedure:
+
+Prep boundaries
+1. Access FAO level 1 and FAO level 2 global administrative boundaries
+2. Filter boundaries by country of interest (see README.md)
+
+Get counts
+1. Get the modal count for each pixel, over the desired time-frame 
+(the most common classification over the whole timespan)
+2. Count the number of pixels for each classification
+3. Count the total number of pixels.
+
+Export data
+
+
+These are the landcover coversion class for
+LC Type 1 (see here: https://developers.google.com/earth-engine/datasets/catalog/MODIS_006_MCD12Q1#bands)
+
+1	05450a	Evergreen Needleleaf Forests: dominated by evergreen conifer trees (canopy >2m). Tree cover >60%.
+2	086a10	Evergreen Broadleaf Forests: dominated by evergreen broadleaf and palmate trees (canopy >2m). Tree cover >60%.
+3	54a708	Deciduous Needleleaf Forests: dominated by deciduous needleleaf (larch) trees (canopy >2m). Tree cover >60%.
+4	78d203	Deciduous Broadleaf Forests: dominated by deciduous broadleaf trees (canopy >2m). Tree cover >60%.
+5	009900	Mixed Forests: dominated by neither deciduous nor evergreen (40-60% of each) tree type (canopy >2m). Tree cover >60%.
+6	c6b044	Closed Shrublands: dominated by woody perennials (1-2m height) >60% cover.
+7	dcd159	Open Shrublands: dominated by woody perennials (1-2m height) 10-60% cover.
+8	dade48	Woody Savannas: tree cover 30-60% (canopy >2m).
+9	fbff13	Savannas: tree cover 10-30% (canopy >2m).
+10	b6ff05	Grasslands: dominated by herbaceous annuals (<2m).
+11	27ff87	Permanent Wetlands: permanently inundated lands with 30-60% water cover and >10% vegetated cover.
+12	c24f44	Croplands: at least 60% of area is cultivated cropland.
+13	a5a5a5	Urban and Built-up Lands: at least 30% impervious surface area including building materials, asphalt and vehicles.
+14	ff6d4c	Cropland/Natural Vegetation Mosaics: mosaics of small-scale cultivation 40-60% with natural tree, shrub, or herbaceous vegetation.
+15	69fff8	Permanent Snow and Ice: at least 60% of area is covered by snow and ice for at least 10 months of the year.
+16	f9ffa4	Barren: at least 60% of area is non-vegetated barren (sand, rock, soil) areas with less than 10% vegetation.
+17	1c0dff	Water Bodies: at least 60% of area is covered by permanent water bodies.
+
+
+
+*/
+
+
 // Getting Data -----------------------------------------------
 var fao_level_1 = ee.FeatureCollection("FAO/GAUL/2015/level1"); 
 var fao_level_2 = ee.FeatureCollection("FAO/GAUL/2015/level2");
