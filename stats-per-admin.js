@@ -31,50 +31,43 @@ var point_count_per_feature = function(
   maxPixels
   ){
   // Inner function which takes the feature
-  var feature_collection_mapping = function (feature){
-    
-
-  // var imageCollection =ee.ImageCollection('MODIS/006/MCD12Q1')//imageCollection
-  // var band = "LC_Type1"//band
-  // var dateStart = '2018-12-31'//dateStart
-  // var dateEnd = '2020-01-02'//dateEnd
-  // var scale = 30//scale
-  // var maxPixels = 40e9//maxPixels    
-
-  var image_collection = imageCollection.
-                      // Select the band
-                      select(band).
-                      // Filter Date
-                      filterDate(dateStart, dateEnd)
-                      
-  var image = image_collection.mode()
-  // var geometry = feature.geometry()
+    var feature_collection_mapping = function (feature){
+      
+    // Select band and date
+    var image_collection = imageCollection.
+                        // Select the band
+                        select(band).
+                        // Filter Date
+                        filterDate(dateStart, dateEnd)
   
-  var reducer =  ee.Reducer.frequencyHistogram().combine({
-    reducer2: ee.Reducer.count(),
-    sharedInputs: true
-  })
+  // Find the mode over the whole timescale (reducer)                    
+    var image = image_collection.mode()
+    // var geometry = feature.geometry()
+    
+    // Create a combined reducer to obtain count and
+    // relative frequency of different categories
+    var reducer =  ee.Reducer.frequencyHistogram().combine({
+      reducer2: ee.Reducer.count(),
+      sharedInputs: true
+    })
 
   // Get the modal band counts for that region
-  var pixel_frequency = image.reduceRegion({
-            reducer:reducer,
-            geometry:feature.geometry(),
-            scale:500
-        })//.getInfo()
-        
-  // var pixel_counts = ee.Feature(
-  //     feature.geometry(),
-  //     pixel_frequency
-  //     )
-    
+    var pixel_frequency = image.reduceRegion({
+              reducer:reducer,
+              geometry:feature.geometry(),
+              scale:500
+          })
+          
+
     // Getting info on bands and values
-    var subset_hist = band + '_histogram'
-    var keys = ee.Dictionary(pixel_frequency.get(subset_hist)).keys()
-    var values = ee.Dictionary(pixel_frequency.get(subset_hist)).values()
-    var indexes = ee.List.sequence(0, ee.Number(keys.length().subtract(1), 1))
+    // var keys = ee.Dictionary(pixel_frequency.get(subset_hist)).keys()
+    // var values = ee.Dictionary(pixel_frequency.get(subset_hist)).values()
+    // var indexes = ee.List.sequence(0, ee.Number(keys.length().subtract(1), 1))
     
     // Getting info on count
     var subset_count = band + '_count'
+      var subset_hist = band + '_histogram'
+
     var count = pixel_frequency.get(subset_count)
     
  
@@ -82,63 +75,18 @@ var point_count_per_feature = function(
     // var adm0_code = feature.get('ADM0_CODE')
     var feature_information = feature.toDictionary()
 
-
-    // // var geometry = feature.geometry();
-    
     // // Add new information to the dictionary
     feature_information = feature_information.set('dateStart', dateStart);
     feature_information = feature_information.set('dateEnd', dateEnd);
     feature_information = feature_information.set('scale', scale);
     feature_information = feature_information.set('maxPixels', maxPixels);
     feature_information = feature_information.set('pixelCount', count);
-
-    // feature_information = feature_information.set('pixel_info', pixel_information);
+    feature_information = feature_information.set('pixelFrequency', pixel_frequency.get(subset_hist));
     
-    var features_to_return = indexes.map(function(index){
-      var new_dictionary = feature_information
-      
-   
-      new_dictionary = new_dictionary.set('variable', 'land_cover_class')
-      new_dictionary = new_dictionary.set('band', keys.get(index))
-      new_dictionary = new_dictionary.set('value', values.get(index))
-      
-      var subfeature = ee.Feature(
-        feature.geometry(),
-        new_dictionary
-      )
-      return(subfeature)
-    })
-    
-    
-      
-    var featureCollection = ee.FeatureCollection(
-      features_to_return
-      ).flatten()
-      
-    //   return(ee.Feature(
-    //   feature.geometry(),
-    // {result:featureCollection}))
-      
-    //   return(subfeature)
-    //   return(ee.Feature(
-    //   feature.geometry(),
-    // {result:sequence}))
-
-      
-    // })
-
-    // var feature_collection = ee.FeatureCollection(
-    //   featureCollection
-    //   )
-    
-    // var subfeature = ee.Feature(
-    //   feature.geometry(),
-    //   feature_information
-    //   )
-    
-     return(features_to_return)
-    
-    
+    return(ee.Feature(
+      feature.geometry(),
+      feature_information
+      ))
    }
    return(feature_collection_mapping)
  }
@@ -156,45 +104,6 @@ print(mapped_feature)
 
 
 
-
-// var image_collection = imageCollection.
-//                         // Select the band
-//                         select(band).
-//                         // Filter Date
-//                         filterDate(dateStart, dateEnd)
-                        
-//     var image = image_collection.mode()
-//     // var geometry = feature.geometry()
-
-//     // Get the modal band counts for that region
-//     var pixel_frequency = image.reduceRegion({
-//             reducer:ee.Reducer.frequencyHistogram(),
-//             geometry:geometry,
-//             scale:30,
-//             maxPixels:40e9
-//         }).getInfo()
-        
-//     // Get the total pixel counts for that region
-//     var pixel_count = image.reduceRegion({
-//             reducer:ee.Reducer.count(),
-//             geometry:geometry,
-//             scale:30,
-//             maxPixels:40e9
-//         }).getInfo()
-        
-//     var keys = ee.Dictionary(pixel_frequency[band]).keys()
-//     var values =  ee.Dictionary(pixel_frequency[band]).values()
-//     var indexes = ee.List.sequence(0, ee.Number(keys.length()).subtract(1), 1)
-    
-    
-//     var pixel_ratios = indexes.map(function(index){
-//       var value = ee.Number(values.get(index))
-//       var count = ee.Number(pixel_count[band])
-//       var ratio = ee.Number(value).divide(count)
-//       return(ratio)
-//     })
-    
-//   print(pixel_ratios)
 
 
 
