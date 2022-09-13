@@ -66,19 +66,24 @@ var point_count_per_feature = function(
   //     feature.geometry(),
   //     pixel_frequency
   //     )
-
+    
+    // Getting info on bands and values
     var subset_hist = band + '_histogram'
-
-    return(ee.Feature(
-      feature.geometry(),
-    {result:pixel_frequency.get(subset_hist)}))
+    var keys = ee.Dictionary(pixel_frequency.get(subset_hist)).keys()
+    var values = ee.Dictionary(pixel_frequency.get(subset_hist)).values()
+    var sequence = ee.List.sequence(0, ee.Number(keys.length().subtract(1), 1))
+    
+    // Getting info on count
+    var subset_count = band + '_count'
+    var count = pixel_frequency.get(subset_count)
+    
+ 
     
     // var adm0_code = feature.get('ADM0_CODE')
     var feature_information = feature.toDictionary()
     var pixel_information = pixel_counts.toDictionary()
     
-    var subset_count = band + '_count'
-    var count = pixel_frequency.get(subset_count)
+
     // // var geometry = feature.geometry();
     
     // // Add new information to the dictionary
@@ -86,20 +91,31 @@ var point_count_per_feature = function(
     feature_information = feature_information.set('dateEnd', dateEnd);
     feature_information = feature_information.set('scale', scale);
     feature_information = feature_information.set('maxPixels', maxPixels);
-    feature_information = feature_information.set('pixel_info', pixel_information);
+    feature_information = feature_information.set('pixelCount', count);
+
+    // feature_information = feature_information.set('pixel_info', pixel_information);
     
-    // var featureCollection = indexes.map(function(index){
-    //   var new_dictionary = feature_information
-    //   new_dictionary = new_dictionary.set('variable', 'land_cover_class')
-    //   // new_dictionary = new_dictionary.set('band', keys.get(index))
-    //   // new_dictionary = new_dictionary.set('value', pixel_ratios.get(index))
+    var features_to_return = indexes.map(function(index){
+      var new_dictionary = feature_information
       
-    //   var subfeature = ee.Feature(
-    //   feature.geometry(),
-    //   new_dictionary
-    //   )
+   
+      new_dictionary = new_dictionary.set('variable', 'land_cover_class')
+      new_dictionary = new_dictionary.set('band', keys.get(index))
+      new_dictionary = new_dictionary.set('value', values.get(index))
+      
+      var subfeature = ee.Feature(
+      feature.geometry(),
+      new_dictionary
+      )
+      
+    var featureCollection = ee.FeatureCollection(
+      features_to_return
+      )
       
     //   return(subfeature)
+    //   return(ee.Feature(
+    //   feature.geometry(),
+    // {result:sequence}))
 
       
     // })
@@ -108,12 +124,12 @@ var point_count_per_feature = function(
     //   featureCollection
     //   )
     
-    var subfeature = ee.Feature(
-       feature.geometry(),
-       feature_information
-       )
+    // var subfeature = ee.Feature(
+    //   feature.geometry(),
+    //   feature_information
+    //   )
     
-     return(subfeature)
+     return(featureCollection)
     
     
    }
