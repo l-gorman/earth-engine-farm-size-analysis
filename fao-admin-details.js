@@ -1,3 +1,13 @@
+/*
+
+Visualise and save basic information
+from the FAO GAUL administrative
+boundaries, looking at 9
+countries in SSA of interest
+
+*/
+
+
 // Getting Data -----------------------------------------------
 
 var fao_level_1_fc = ee.FeatureCollection("FAO/GAUL/2015/level1"); 
