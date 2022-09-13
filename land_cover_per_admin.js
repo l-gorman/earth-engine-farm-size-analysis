@@ -155,7 +155,7 @@ Export.table.toDrive({
   description:'land-cover-level-1',
   fileFormat: 'csv',
   folder: 'earth-engine-outputs/farm-size-analysis',
-  fileNamePrefix: 'land-cover-categories-level-1',
+  fileNamePrefix: 'land-cover-categories-level-1'
 
 });
 
