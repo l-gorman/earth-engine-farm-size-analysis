@@ -34,12 +34,12 @@ var point_count_per_feature = function(
   var feature_collection_mapping = function (feature){
     
 
-  var imageCollection =ee.ImageCollection('MODIS/006/MCD12Q1')//imageCollection
-  var band = "LC_Type1"//band
-  var dateStart = '2018-12-31'//dateStart
-  var dateEnd = '2020-01-02'//dateEnd
-  var scale = 30//scale
-  var maxPixels = 40e9//maxPixels    
+  // var imageCollection =ee.ImageCollection('MODIS/006/MCD12Q1')//imageCollection
+  // var band = "LC_Type1"//band
+  // var dateStart = '2018-12-31'//dateStart
+  // var dateEnd = '2020-01-02'//dateEnd
+  // var scale = 30//scale
+  // var maxPixels = 40e9//maxPixels    
 
   var image_collection = imageCollection.
                       // Select the band
@@ -58,23 +58,19 @@ var point_count_per_feature = function(
   // Get the modal band counts for that region
   var pixel_frequency = image.reduceRegion({
             reducer:reducer,
-            geometry:geometry,
+            geometry:feature.geometry(),
             scale:500
         })//.getInfo()
         
-  var pixel_counts = ee.Feature(
-       feature.geometry(),
-       pixel_frequency
-       )
-       
-
-
-
-
+  // var pixel_counts = ee.Feature(
+  //     feature.geometry(),
+  //     pixel_frequency
+  //     )
     
-
-
-    
+    var subset = band + '_count'
+    return(ee.Feature(
+      feature.geometry(),
+    {result:subset}))
     
     // var adm0_code = feature.get('ADM0_CODE')
     var feature_information = feature.toDictionary()
@@ -108,7 +104,12 @@ var point_count_per_feature = function(
     //   featureCollection
     //   )
     
-     return(feature_collection)
+    var subfeature = ee.Feature(
+       feature.geometry(),
+       feature_information
+       )
+    
+     return(subfeature)
     
     
    }
