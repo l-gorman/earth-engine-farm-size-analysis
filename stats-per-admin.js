@@ -1,23 +1,7 @@
 // Getting Data -----------------------------------------------
 
-// Administrative Data
-// Find country codes here:
-// https://data.apps.fao.org/catalog/dataset/gaul-codes/resource/cfdaf156-26b9-46c2-aab2-eb437fc16622
-
-// Countries of Interest 
-// Burkina Faso - 42
-// Ethiopia - 79
-// Ghana - 94
-// Kenya - 133
-// Mali - 155
-// Nigeria - 182 
-// Rwanda - 205
-// Tanzania - 257
-// Uganda - 253
-
-
+var fao_level_1 = ee.FeatureCollection("FAO/GAUL/2015/level1"); 
 var fao_level_2 = ee.FeatureCollection("FAO/GAUL/2015/level2");
-var fao_level_1 = ee.FeatureCollection("FAO/GAUL/2015/level1");
 
 // var filter = ee.Filter.inList('ADM0_CODE', [42,79, 94, 133, 155, 182, 205, 257, 253]) // Admin codes
 var filter = ee.Filter.eq('ADM1_CODE', 1927); //2579
@@ -65,7 +49,7 @@ var keys = ee.Dictionary(pixel_frequency[band]).keys()
 var values =  ee.Dictionary(pixel_frequency[band]).toArray()
 
 print(keys)
-print(values)
+print(values.get(1))
 
 print(pixel_count[band])
 
