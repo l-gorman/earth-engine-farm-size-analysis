@@ -11,7 +11,7 @@ engine datasets of interest.
 
 // Getting Administrative Data -----------------------------------------------
 var fao_level_1 = ee.FeatureCollection("FAO/GAUL/2015/level1"); 
-// var fao_level_2 = ee.FeatureCollection("FAO/GAUL/2015/level2");
+var fao_level_2 = ee.FeatureCollection("FAO/GAUL/2015/level2");
 // var fao_level_0 = ee.FeatureCollection("FAO/GAUL/2015/level0");
 
 // var filter = ee.Filter.eq('ADM1_CODE', 1927); //2579
@@ -25,32 +25,52 @@ var fao_level_1 = fao_level_1.filter(filter);
 // var fao_level_1 = fao_level_1.filter(filter);
 // var fao_level_2 = fao_level_2.filter(filter);
 
-var dataset = ee.ImageCollection("JAXA/GCOM-C/L3/LAND/LST/V2")
-                .filterDate('2020-01-01', '2020-02-01')
-                // filter to daytime data only
-                .filter(ee.Filter.eq("SATELLITE_DIRECTION", "D"));
-                
-// Multiply with slope coefficient
-var dataset = dataset.mean().multiply(0.02);
-
 var stats_per_region =function(
   dataset,
-  band,
-  reducer
+  band
   ){
     var stats_per_feature = function(feature){
       
-      var reduced_region = dataset.reduceRegion({
+      var reducer = ee.Reducer.mean().combine({
+      reducer2: ee.Reducer.stdDev(),
+      sharedInputs: true
+    }).combine({
+      reducer2: ee.Reducer.median(),
+      sharedInputs: true
+    }).combine({
+      reducer2: ee.Reducer.min(),
+      sharedInputs: true
+    }).combine({
+      reducer2: ee.Reducer.max(),
+      sharedInputs: true
+    }).combine({
+      reducer2: ee.Reducer.percentile([25]),
+      sharedInputs: true
+    }).combine({
+      reducer2: ee.Reducer.percentile([75]),
+      sharedInputs: true
+    }).combine({
+      reducer2: ee.Reducer.skew(),
+      sharedInputs: true
+    })
+      var image = dataset.select(band)
+      var reduced_region = image.reduceRegion({
               reducer:reducer,
               geometry:feature.geometry(),
-              scale:20000,
-              maxPixels:40e9
+              scale:500,
+              maxPixels:1e9
           })
+          
+      var feature_information = feature.toDictionary()
+      var reduced_region_info  = ee.Dictionary(reduced_region)
+      
+       var results_data = feature_information.combine(reduced_region_info, false)
+
       
       
       var result =ee.Feature(
           feature.geometry(),
-          reduced_region
+          results_data
           )
         
       return(result)
@@ -59,41 +79,65 @@ var stats_per_region =function(
     }
     return(stats_per_feature)
   }
-  
-  
-var regional_land_surface_temp = fao_level_1.map(stats_per_region(
-  dataset,
-  'LST_AVE',
-  ee.Reducer.mean()
+
+var compute_summary_stats_and_save_data = function(
+    region_data, // Feature Collection of geometries
+    dataset, // The dataset (image collection) to summarise
+    band, // The band of interest
+    name // The name of the dataset to be saved
+  ){
+    
+    var result = region_data.map(stats_per_region(
+    dataset,
+    band
   ))
   
-print(regional_land_surface_temp)
+    print(result)
+  
+    Export.table.toDrive({
+    collection: result,
+    description:name,
+    fileFormat: 'csv',
+    folder: 'earth-engine-outputs/farm-size-analysis',
+    fileNamePrefix: name
+    })
+    return('');
+  }
+
+// Preparing datasets
+var land_surface_temp_ds = ee.ImageCollection("JAXA/GCOM-C/L3/LAND/LST/V2")
+                .filterDate('2022-01-01', '2014-02-01')
+                // filter to daytime data only
+                .filter(ee.Filter.eq("SATELLITE_DIRECTION", "D"));
+// Multiply with slope coefficient
+var land_surface_temp_ds = land_surface_temp_ds.mean().multiply(0.02);
+var land_surface_temp_band = "LST_AVE"
+  
+var regional_land_surface_temp = fao_level_1.map(stats_per_region(
+  land_surface_temp_ds,
+  land_surface_temp_band
+  ))
+  
+  
+compute_summary_stats_and_save_data(
+  fao_level_1,
+  land_surface_temp_ds,
+  land_surface_temp_band,
+  'land-surface-temp-zone-1-test'
+  )
+  
+// print(regional_land_surface_temp)
                 
-print(dataset)
+// print(dataset)
 
 
-var landAreaImg = regional_land_surface_temp
-  .filter(ee.Filter.notNull(['LST_AVE']))
-  .reduceToImage({
-    properties: ['LST_AVE'],
-    reducer: ee.Reducer.first()
-});
+var digital_elevation_ds = ee.ImageCollection("CGIAR/SRTM90_V4")
+                .filterDate('2001-01-01', '1999-02-01')
+var digital_elevation_band = 'elevation'
 
 
 
 
-var visualization = {
-  min: 250,
-  max: 316,
-  palette: [
-    "040274","040281","0502a3","0502b8","0502ce","0502e6",
-    "0602ff","235cb1","307ef3","269db1","30c8e2","32d3ef",
-    "3be285","3ff38f","86e26f","3ae237","b5e22e","d6e21f",
-    "fff705","ffd611","ffb613","ff8b13","ff6e08","ff500d",
-    "ff0000","de0101","c21301","a71001","911003",
-  ]
-};
 
-Map.setCenter(25, 0, 3);
 
-Map.addLayer(landAreaImg, visualization, "Land Surface Temperature");
+
