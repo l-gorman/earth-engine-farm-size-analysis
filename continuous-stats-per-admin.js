@@ -15,10 +15,10 @@ var fao_level_2 = ee.FeatureCollection("FAO/GAUL/2015/level2");
 
 // var filter = ee.Filter.eq('ADM1_CODE', 1927); //2579
 // var filter = ee.Filter.inList('ADM0_CODE', [ 257]) // Admin codes
-// var filter = ee.Filter.inList('ADM0_CODE', [42,79, 94, 133, 155, 182, 205, 257, 253]) // Admin codes
+var filter = ee.Filter.inList('ADM0_CODE', [42,79, 94, 133, 155, 182, 205, 257, 253]) // Admin codes
 
 
-// var fao_level_1 = fao_level_1.filter(filter);
+var fao_level_1 = fao_level_1.filter(filter);
 // var fao_level_2 = fao_level_2.filter(filter);
 
 var dataset = ee.ImageCollection("JAXA/GCOM-C/L3/LAND/LST/V2")
@@ -38,7 +38,8 @@ var stats_per_region =function(
       var reduced_region = dataset.reduceRegion({
               reducer:ee.Reducer.mean(),
               geometry:feature.geometry(),
-              scale:500
+              scale:500,
+              maxPixels:40e9
           })
       
       
