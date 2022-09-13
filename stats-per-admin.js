@@ -103,8 +103,8 @@ var point_count_per_feature = function(
       new_dictionary = new_dictionary.set('value', values.get(index))
       
       var subfeature = ee.Feature(
-      feature.geometry(),
-      new_dictionary
+        feature.geometry(),
+        new_dictionary
       )
       return(subfeature)
     })
