@@ -34,7 +34,7 @@ Map.addLayer(fao_level_1, {}, 'First Level Administrative Units');
 
 //Example of Writing table to Google Drive
 Export.table.toDrive({
-  collection: fao_level_1,
+  collection: ee.FeatureCollection(fao_level_1),
   description:'fao-level-1-details',
   fileFormat: 'csv',
   folder: 'earth-engine-outputs/farm-size-analysis',
@@ -43,7 +43,7 @@ Export.table.toDrive({
 });
 
 Export.table.toDrive({
-  collection: fao_level_2,
+  collection: ee.FeatureCollection(fao_level_2),
   description:'fao-level-2-details',
   fileFormat: 'csv',
   folder: 'earth-engine-outputs/farm-size-analysis',
