@@ -4,11 +4,6 @@ Example script showing how to calculate the
 average subnational temperature for Burkina Faso,
 Kenya, UAE, the Netherlands and France.
 
-
-
-
-
-
 */
 
 
