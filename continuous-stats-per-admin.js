@@ -15,10 +15,10 @@ var fao_level_2 = ee.FeatureCollection("FAO/GAUL/2015/level2");
 
 // var filter = ee.Filter.eq('ADM1_CODE', 1927); //2579
 // var filter = ee.Filter.inList('ADM0_CODE', [ 257]) // Admin codes
-var filter = ee.Filter.inList('ADM0_CODE', [42,79, 94, 133, 155, 182, 205, 257, 253]) // Admin codes
+// var filter = ee.Filter.inList('ADM0_CODE', [42,79, 94, 133, 155, 182, 205, 257, 253]) // Admin codes
 
 
-var fao_level_1 = fao_level_1.filter(filter);
+// var fao_level_1 = fao_level_1.filter(filter);
 // var fao_level_2 = fao_level_2.filter(filter);
 
 var dataset = ee.ImageCollection("JAXA/GCOM-C/L3/LAND/LST/V2")
@@ -66,13 +66,17 @@ print(regional_land_surface_temp)
 print(dataset)
 
 
-
+var landAreaImg = regional_land_surface_temp
+  .filter(ee.Filter.notNull(['LST_AVE']))
+  .reduceToImage({
+    properties: ['LST_AVE'],
+    reducer: ee.Reducer.first()
+});
 
 
 
 
 var visualization = {
-  bands: ['LST_AVE'],
   min: 250,
   max: 316,
   palette: [
@@ -86,4 +90,4 @@ var visualization = {
 
 Map.setCenter(128.45, 33.33, 5);
 
-Map.addLayer(regional_land_surface_temp, visualization, "Land Surface Temperature");
+Map.addLayer(landAreaImg, visualization, "Land Surface Temperature");
