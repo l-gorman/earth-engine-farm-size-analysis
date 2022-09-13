@@ -45,7 +45,7 @@ var point_count_per_feature = function(
     // Get the modal band counts for that region
     var pixel_frequency = image.reduceRegion({
             reducer:ee.Reducer.frequencyHistogram(),
-            geometry:geometry,
+            geometry:feature.geometry(),
             scale:30,
             maxPixels:40e9
         }).getInfo()
@@ -53,7 +53,7 @@ var point_count_per_feature = function(
     // Get the total pixel counts for that region
     var pixel_count = image.reduceRegion({
             reducer:ee.Reducer.count(),
-            geometry:geometry,
+            geometry:feature.geometry(),
             scale:30,
             maxPixels:40e9
         }).getInfo()
@@ -118,6 +118,8 @@ var mapped_feature = fao_level_1.map(point_count_per_feature(
   30,//scale
   40e9//maxPixels
   ))
+  
+print(mapped_feature)
 
 
 // var imageCollection= ee.ImageCollection('MODIS/006/MCD12Q1')//imageCollection
