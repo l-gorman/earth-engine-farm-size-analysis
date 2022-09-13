@@ -108,10 +108,16 @@ var point_count_per_feature = function(
       )
       return(subfeature)
     })
+    
+    
       
     var featureCollection = ee.FeatureCollection(
       features_to_return
       )
+      
+      return(ee.Feature(
+      feature.geometry(),
+    {result:features_to_return}))
       
     //   return(subfeature)
     //   return(ee.Feature(
