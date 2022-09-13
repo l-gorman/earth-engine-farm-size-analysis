@@ -71,7 +71,7 @@ var point_count_per_feature = function(
     var subset_hist = band + '_histogram'
     var keys = ee.Dictionary(pixel_frequency.get(subset_hist)).keys()
     var values = ee.Dictionary(pixel_frequency.get(subset_hist)).values()
-    var sequence = ee.List.sequence(0, ee.Number(keys.length().subtract(1), 1))
+    var indexes = ee.List.sequence(0, ee.Number(keys.length().subtract(1), 1))
     
     // Getting info on count
     var subset_count = band + '_count'
@@ -81,8 +81,7 @@ var point_count_per_feature = function(
     
     // var adm0_code = feature.get('ADM0_CODE')
     var feature_information = feature.toDictionary()
-    var pixel_information = pixel_counts.toDictionary()
-    
+
 
     // // var geometry = feature.geometry();
     
