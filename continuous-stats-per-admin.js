@@ -118,7 +118,7 @@ var land_surface_temp_ds = ee.ImageCollection("JAXA/GCOM-C/L3/LAND/LST/V2")
                 // filter to daytime data only
                 .filter(ee.Filter.eq("SATELLITE_DIRECTION", "D"));
 // Multiply with slope coefficient
-var land_surface_temp_ds = land_surface_temp_ds.mean().multiply(0.02);
+var land_surface_temp_mean_ds = land_surface_temp_ds.mean().multiply(0.02);
 var land_surface_temp_band = "LST_AVE"
   
 // 
@@ -130,33 +130,37 @@ var land_surface_temp_band = "LST_AVE"
 //   'land-surface-temp-zone-1-test'
 //   )
   
-// print(regional_land_surface_temp)
-                
-// print(dataset)
+
 
 
 var digital_elevation_ds = ee.Image("CGIAR/SRTM90_V4")
 
 var digital_elevation_band = 'elevation'
 
-compute_summary_stats_and_save_data(
-  fao_level_1,
-  digital_elevation_ds,
-  digital_elevation_band,
-  'digital-elevation-data-test'
-)
+// compute_summary_stats_and_save_data(
+//   fao_level_1,
+//   digital_elevation_ds,
+//   digital_elevation_band,
+//   'digital-elevation-data-test'
+// )
 
 
 // Plotting-------------------------------------
+var dataset = land_surface_temp_mean_ds
+var band = land_surface_temp_band
+var stat = 'mean'
+
 var regional_land_surface_temp = fao_level_1.map(stats_per_region(
-  land_surface_temp_ds,
+  dataset,
   land_surface_temp_band
   ))
+  
+print(regional_land_surface_temp)
 
 var landAreaImg = regional_land_surface_temp
-  .filter(ee.Filter.notNull(['LST_AVE']))
+  .filter(ee.Filter.notNull([band + '_'+ stat]))
   .reduceToImage({
-    properties: ['LST_AVE'],
+    properties: [band + '_'+ stat],
     reducer: ee.Reducer.first()
 });
 
