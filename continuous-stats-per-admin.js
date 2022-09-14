@@ -115,9 +115,8 @@ var land_surface_temp_ds = ee.ImageCollection("JAXA/GCOM-C/L3/LAND/LST/V2")
                 .filter(ee.Filter.eq("SATELLITE_DIRECTION", "D"));
 // Multiply with slope coefficient
 var land_surface_temp_mean_ds = land_surface_temp_ds.mean().multiply(0.02);
-var land_surface_temp_25_ds = land_surface_temp_ds.reduce(ee.Reducer.percentile([25])).multiply(0.02);
+// var land_surface_temp_25_ds = land_surface_temp_ds.reduce(ee.Reducer.percentile([25])).multiply(0.02);
 
-print(land_surface_temp_mean_ds)
 
 
 var land_surface_temp_mean_band = "LST_AVE"
@@ -151,9 +150,9 @@ var land_surface_temp_mean_band = "LST_AVE"
 
 // Digital Elevation --------------------------------------------------------------
 
-var digital_elevation_ds = ee.Image("CGIAR/SRTM90_V4")
+// var digital_elevation_ds = ee.Image("CGIAR/SRTM90_V4")
 
-var digital_elevation_band = 'elevation'
+// var digital_elevation_band = 'elevation'
 
 // compute_summary_stats_and_save_data(
 //   fao_level_1,
