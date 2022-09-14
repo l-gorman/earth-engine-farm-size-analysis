@@ -6,23 +6,29 @@ engine datasets of interest.
 
 */
 
-
+// ----------------------------------------------------------------
 // Getting Administrative Data -----------------------------------------------
+// ----------------------------------------------------------------
+
+
 var fao_level_1 = ee.FeatureCollection("FAO/GAUL/2015/level1"); 
 var fao_level_2 = ee.FeatureCollection("FAO/GAUL/2015/level2");
 // var fao_level_0 = ee.FeatureCollection("FAO/GAUL/2015/level0");
 
+// Building Filter
 // var filter = ee.Filter.eq('ADM1_CODE', 1927); //2579
 // var filter = ee.Filter.inList('ADM0_CODE', [ 257]) // Admin codes
 // var filter = ee.Filter.inList('ADM0_CODE', [42,79, 94, 133, 155, 182, 205, 257, 253]) // Admin codes
 var filter = ee.Filter.inList('ADM0_CODE', [ 85, 177, 255,42, 133]) // Admin codes
 
+
+// Filtering
 var fao_level_1 = fao_level_1.filter(filter);
-
-
-// var fao_level_1 = fao_level_1.filter(filter);
 // var fao_level_2 = fao_level_2.filter(filter);
 
+// ----------------------------------------------------------------
+// Functions ----------------------------------------------------------------
+// ----------------------------------------------------------------
 var stats_per_region =function(
   dataset,
   band
@@ -102,7 +108,11 @@ var compute_summary_stats_and_save_data = function(
     return('');
   }
 
-// Preparing datasets
+
+// ----------------------------------------------------------------
+// Preparing datasets ----------------------------------------------------------------
+// ----------------------------------------------------------------
+
 var land_surface_temp_ds = ee.ImageCollection("JAXA/GCOM-C/L3/LAND/LST/V2")
                 .filterDate('2014-01-01', '2022-02-01')
                 // filter to daytime data only
