@@ -104,7 +104,7 @@ var compute_summary_stats_and_save_data = function(
 
 // Preparing datasets
 var land_surface_temp_ds = ee.ImageCollection("JAXA/GCOM-C/L3/LAND/LST/V2")
-                .filterDate('2022-01-01', '2014-02-01')
+                .filterDate('2014-01-01', '2022-02-01')
                 // filter to daytime data only
                 .filter(ee.Filter.eq("SATELLITE_DIRECTION", "D"));
 // Multiply with slope coefficient
@@ -143,7 +143,32 @@ var regional_land_surface_temp = fao_level_1.map(stats_per_region(
   land_surface_temp_band
   ))
 
+var landAreaImg = regional_land_surface_temp
+  .filter(ee.Filter.notNull(['LST_AVE']))
+  .reduceToImage({
+    properties: ['LST_AVE'],
+    reducer: ee.Reducer.first()
+});
 
+
+
+
+// Create a schema for different temperatures
+var visualization = {
+  min: 250,
+  max: 316,
+  palette: [
+    "040274","040281","0502a3","0502b8","0502ce","0502e6",
+    "0602ff","235cb1","307ef3","269db1","30c8e2","32d3ef",
+    "3be285","3ff38f","86e26f","3ae237","b5e22e","d6e21f",
+    "fff705","ffd611","ffb613","ff8b13","ff6e08","ff500d",
+    "ff0000","de0101","c21301","a71001","911003",
+  ]
+};
+
+Map.setCenter(25, 0, 3);
+
+Map.addLayer(landAreaImg, visualization, "Land Surface Temperature");
 
 
 
