@@ -153,15 +153,16 @@ var compute_summary_stats_and_save_data = function(
 // Population Density ----------------------------------------------------------------
 var pop_density_ds = ee.ImageCollection("CIESIN/GPWv411/GPW_Population_Density")
                 .filterDate('2014-01-01', '2022-02-01')
-              
+var pop_density_mean_ds = pop_density_ds.reduce(ee.Reducer.mean());
+var pop_density_mean_band = "population_density_mean"           
 
 
 // Plotting-------------------------------------
 
 
-var regional_land_surface_temp = fao_level_1.map(stats_per_region(
-  land_surface_temp_stdev_ds,
-  land_surface_temp_stdev_band
+var regional_stats = fao_level_1.map(stats_per_region(
+  pop_density_mean_ds,
+  pop_density_mean_band
   ))
   
 print(regional_land_surface_temp)
@@ -169,9 +170,9 @@ print(regional_land_surface_temp)
 // print(regional_land_surface_temp)
 
 var landAreaImg = regional_land_surface_temp
-  .filter(ee.Filter.notNull([land_surface_temp_stdev_band + '_mean']))
+  .filter(ee.Filter.notNull([pop_density_mean_band + '_mean']))
   .reduceToImage({
-    properties: [land_surface_temp_stdev_band + '_mean'],
+    properties: [pop_density_mean_band + '_mean'],
     reducer: ee.Reducer.first()
 });
 
@@ -180,8 +181,8 @@ var landAreaImg = regional_land_surface_temp
 
 // // Create a schema for different temperatures
 var visualization = {
-  min: 250,
-  max: 316,
+  min: 0,
+  max: 1000,
   palette: [
     "040274","040281","0502a3","0502b8","0502ce","0502e6",
     "0602ff","235cb1","307ef3","269db1","30c8e2","32d3ef",
@@ -193,7 +194,7 @@ var visualization = {
 
 Map.setCenter(25, 0, 3);
 
-Map.addLayer(landAreaImg, visualization, "Land Surface Temperature");
+Map.addLayer(landAreaImg, visualization, "Summary Stats per region");
 
 
 
