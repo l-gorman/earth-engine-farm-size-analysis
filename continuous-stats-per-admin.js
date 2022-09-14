@@ -3,15 +3,12 @@
 Calculate various key statistics for earth
 engine datasets of interest.
 
-
-
-
 */
 
 
 // Getting Administrative Data -----------------------------------------------
 var fao_level_1 = ee.FeatureCollection("FAO/GAUL/2015/level1"); 
-var fao_level_2 = ee.FeatureCollection("FAO/GAUL/2015/level2");
+// var fao_level_2 = ee.FeatureCollection("FAO/GAUL/2015/level2");
 // var fao_level_0 = ee.FeatureCollection("FAO/GAUL/2015/level0");
 
 // var filter = ee.Filter.eq('ADM1_CODE', 1927); //2579
@@ -23,7 +20,6 @@ var fao_level_1 = fao_level_1.filter(filter);
 
 
 // var fao_level_1 = fao_level_1.filter(filter);
-// var fao_level_2 = fao_level_2.filter(filter);
 
 var stats_per_region =function(
   dataset,
