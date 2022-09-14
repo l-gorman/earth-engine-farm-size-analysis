@@ -65,6 +65,8 @@ var stats_per_region =function(
               maxPixels:1e9
           })
           
+       
+          
       var feature_information = feature.toDictionary()
       var reduced_region_info  = ee.Dictionary(reduced_region)
       
@@ -118,10 +120,10 @@ var land_surface_temp_ds = ee.ImageCollection("JAXA/GCOM-C/L3/LAND/LST/V2")
                 // filter to daytime data only
                 .filter(ee.Filter.eq("SATELLITE_DIRECTION", "D"));
 // Multiply with slope coefficient
-var land_surface_temp_mean_ds = land_surface_temp_ds.mean().multiply(0.02);
-var land_surface_temp_band = "LST_AVE"
-  
-// 
+var land_surface_temp_mean_ds = land_surface_temp_ds.reduce(ee.Reducer.mean()).multiply(0.02);
+var land_surface_temp_band = "LST_AVE_mean"
+
+
   
 // compute_summary_stats_and_save_data(
 //   fao_level_1,
@@ -146,28 +148,26 @@ var digital_elevation_band = 'elevation'
 
 
 // Plotting-------------------------------------
-var dataset = land_surface_temp_mean_ds
-var band = land_surface_temp_band
-var stat = 'mean'
+
 
 var regional_land_surface_temp = fao_level_1.map(stats_per_region(
-  dataset,
+  land_surface_temp_mean_ds,
   land_surface_temp_band
   ))
   
-print(regional_land_surface_temp)
+// print(regional_land_surface_temp)
 
 var landAreaImg = regional_land_surface_temp
-  .filter(ee.Filter.notNull([band + '_'+ stat]))
+  .filter(ee.Filter.notNull([land_surface_temp_band + '_mean']))
   .reduceToImage({
-    properties: [band + '_'+ stat],
+    properties: [land_surface_temp_band + '_mean'],
     reducer: ee.Reducer.first()
 });
 
 
 
 
-// Create a schema for different temperatures
+// // Create a schema for different temperatures
 var visualization = {
   min: 250,
   max: 316,
