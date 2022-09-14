@@ -109,13 +109,18 @@ var compute_summary_stats_and_save_data = function(
 
 // Mean Land Surface Temperature --------------------------------------------------------------
 
-// var land_surface_temp_ds = ee.ImageCollection("JAXA/GCOM-C/L3/LAND/LST/V2")
-//                 .filterDate('2022-01-01', '2014-02-01')
-//                 // filter to daytime data only
-//                 .filter(ee.Filter.eq("SATELLITE_DIRECTION", "D"));
-// // Multiply with slope coefficient
-// var land_surface_temp_mean_ds = land_surface_temp_ds.mean().multiply(0.02);
-// var land_surface_temp_mean_band = "LST_AVE"
+var land_surface_temp_ds = ee.ImageCollection("JAXA/GCOM-C/L3/LAND/LST/V2")
+                .filterDate('2022-01-01', '2014-02-01')
+                // filter to daytime data only
+                .filter(ee.Filter.eq("SATELLITE_DIRECTION", "D"));
+// Multiply with slope coefficient
+var land_surface_temp_mean_ds = land_surface_temp_ds.mean().multiply(0.02);
+var land_surface_temp_25_ds = land_surface_temp_ds.reduce(ee.Reducer.percentile([25])).multiply(0.02);
+
+print(land_surface_temp_mean_ds)
+
+
+var land_surface_temp_mean_band = "LST_AVE"
   
 // compute_summary_stats_and_save_data(
 //   fao_level_1,
@@ -126,17 +131,14 @@ var compute_summary_stats_and_save_data = function(
 
 // Quartile 25 Land Surface Temperature --------------------------------------------------------------
 
-var land_surface_temp_ds = ee.ImageCollection("JAXA/GCOM-C/L3/LAND/LST/V2")
-                .filterDate('2022-01-01', '2014-02-01')
-                // filter to daytime data only
-                .filter(ee.Filter.eq("SATELLITE_DIRECTION", "D"));
+
 // Multiply with slope coefficient
-var land_surface_temp_25_ds = land_surface_temp_ds.reduce(ee.Reducer.percentile([25])).multiply(0.02);
-var land_surface_temp_25_ds = land_surface_temp_ds.mean().multiply(0.02);
+// var land_surface_temp_25_ds = land_surface_temp_ds.reduce(ee.Reducer.percentile([25])).multiply(0.02);
+// var land_surface_temp_25_ds = land_surface_temp_ds.mean().multiply(0.02);
 
 // var land_surface_temp_25_band = "LST_AVE"
 
-print(land_surface_temp_25_ds)
+// print(land_surface_temp_25_ds)
 
 // compute_summary_stats_and_save_data(
 //   fao_level_1,
@@ -164,17 +166,17 @@ var digital_elevation_band = 'elevation'
 
 
 // Printing to map --------------------------------------------------------------
-// var summarised_ds = fao_level_1.map(stats_per_region(
-//   land_surface_temp_25_ds, // dataset argument
-//   land_surface_temp_25_band // band argument
-//   ))
+var summarised_ds = fao_level_1.map(stats_per_region(
+  land_surface_temp_mean_ds, // dataset argument
+  land_surface_temp_mean_band // band argument
+  ))
 
-// var summaryImage = summarised_ds
-//   .filter(ee.Filter.notNull(['elevation_mean']))
-//   .reduceToImage({
-//     properties: ['elevation_mean'],
-//     reducer: ee.Reducer.first()
-// });
+var summaryImage = summarised_ds
+  .filter(ee.Filter.notNull(['elevation_mean']))
+  .reduceToImage({
+    properties: ['elevation_mean'],
+    reducer: ee.Reducer.first()
+});
 
 
 
@@ -182,21 +184,21 @@ var digital_elevation_band = 'elevation'
 // Create a schema for visualisation
 // remember to adjust min/,ax for the 
 // values you might expect for these data
-// var visualization = {
-//   min: 4000,
-//   max: -10,
-//   palette: [
-//     "040274","040281","0502a3","0502b8","0502ce","0502e6",
-//     "0602ff","235cb1","307ef3","269db1","30c8e2","32d3ef",
-//     "3be285","3ff38f","86e26f","3ae237","b5e22e","d6e21f",
-//     "fff705","ffd611","ffb613","ff8b13","ff6e08","ff500d",
-//     "ff0000","de0101","c21301","a71001","911003",
-//   ]
-// };
+var visualization = {
+  min: 4000,
+  max: -10,
+  palette: [
+    "040274","040281","0502a3","0502b8","0502ce","0502e6",
+    "0602ff","235cb1","307ef3","269db1","30c8e2","32d3ef",
+    "3be285","3ff38f","86e26f","3ae237","b5e22e","d6e21f",
+    "fff705","ffd611","ffb613","ff8b13","ff6e08","ff500d",
+    "ff0000","de0101","c21301","a71001","911003",
+  ]
+};
 
-// Map.setCenter(25, 0, 3);
+Map.setCenter(25, 0, 3);
 
-// Map.addLayer(summaryImage, visualization, "Land Surface Temperature");
+Map.addLayer(summaryImage, visualization, "Land Surface Temperature");
 
 
 
