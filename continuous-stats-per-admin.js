@@ -164,7 +164,6 @@ var summarised_ds = fao_level_1.map(stats_per_region(
   land_surface_temp_band // band argument
   ))
   
-  print(summarised_ds)
 
 var summaryImage = summarised_ds
   .filter(ee.Filter.notNull(['elevation_mean']))
