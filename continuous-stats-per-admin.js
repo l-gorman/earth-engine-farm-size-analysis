@@ -106,7 +106,7 @@ var compute_summary_stats_and_save_data = function(
 // Mean Land Surface Temperature --------------------------------------------------------------
 
 var land_surface_temp_ds = ee.ImageCollection("JAXA/GCOM-C/L3/LAND/LST/V2")
-                .filterDate('2022-01-01', '2014-02-01')
+                .filterDate('2014-01-01', '2022-01-01')
                 // filter to daytime data only
                 .filter(ee.Filter.eq("SATELLITE_DIRECTION", "D"));
 // Multiply with slope coefficient
@@ -163,6 +163,8 @@ var summarised_ds = fao_level_1.map(stats_per_region(
   land_surface_temp_mean_ds, // dataset argument
   land_surface_temp_band // band argument
   ))
+  
+  print(summarised_ds)
 
 var summaryImage = summarised_ds
   .filter(ee.Filter.notNull(['elevation_mean']))
