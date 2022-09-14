@@ -131,8 +131,8 @@ var land_surface_temp_mean_band = "LST_AVE_mean"
 
 compute_summary_stats_and_save_data(
   fao_level_2,
-  land_surface_temp_ds,
-  land_surface_temp_band,
+  land_surface_temp_mean_ds,
+  land_surface_temp_mean_band,
   'land-surface-temp-zone-2'
   )
   
