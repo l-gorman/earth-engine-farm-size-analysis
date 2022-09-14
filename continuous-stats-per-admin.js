@@ -4,8 +4,6 @@ Calculate various key statistics for earth
 engine datasets of interest.
 
 
-
-
 */
 
 
@@ -17,8 +15,8 @@ var fao_level_2 = ee.FeatureCollection("FAO/GAUL/2015/level2");
 // var filter = ee.Filter.eq('ADM1_CODE', 1927); //2579
 // var filter = ee.Filter.inList('ADM0_CODE', [ 257]) // Admin codes
 // var filter = ee.Filter.inList('ADM0_CODE', [42,79, 94, 133, 155, 182, 205, 257, 253]) // Admin codes
-
 var filter = ee.Filter.inList('ADM0_CODE', [ 85, 177, 255,42, 133]) // Admin codes
+
 var fao_level_1 = fao_level_1.filter(filter);
 
 
@@ -113,10 +111,7 @@ var land_surface_temp_ds = ee.ImageCollection("JAXA/GCOM-C/L3/LAND/LST/V2")
 var land_surface_temp_ds = land_surface_temp_ds.mean().multiply(0.02);
 var land_surface_temp_band = "LST_AVE"
   
-// var regional_land_surface_temp = fao_level_1.map(stats_per_region(
-//   land_surface_temp_ds,
-//   land_surface_temp_band
-//   ))
+// 
   
 // compute_summary_stats_and_save_data(
 //   fao_level_1,
@@ -140,6 +135,13 @@ compute_summary_stats_and_save_data(
   digital_elevation_band,
   'digital-elevation-data-test'
 )
+
+
+// Plotting-------------------------------------
+var regional_land_surface_temp = fao_level_1.map(stats_per_region(
+  land_surface_temp_ds,
+  land_surface_temp_band
+  ))
 
 
 
