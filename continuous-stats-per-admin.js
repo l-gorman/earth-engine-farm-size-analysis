@@ -117,24 +117,24 @@ var compute_summary_stats_and_save_data = function(
 
 
 // Land Surface Temp ----------------------------------------------------------------
-var land_surface_temp_ds = ee.ImageCollection("JAXA/GCOM-C/L3/LAND/LST/V2")
-                .filterDate('2014-01-01', '2022-02-01')
-                // filter to daytime data only
-                .filter(ee.Filter.eq("SATELLITE_DIRECTION", "D"));
+// var land_surface_temp_ds = ee.ImageCollection("JAXA/GCOM-C/L3/LAND/LST/V2")
+//                 .filterDate('2014-01-01', '2022-02-01')
+//                 // filter to daytime data only
+//                 .filter(ee.Filter.eq("SATELLITE_DIRECTION", "D"));
 // Multiply with slope coefficient
-var land_surface_temp_mean_ds = land_surface_temp_ds.reduce(ee.Reducer.mean()).multiply(0.02);
-var land_surface_temp_mean_band = "LST_AVE_mean"
+// var land_surface_temp_mean_ds = land_surface_temp_ds.reduce(ee.Reducer.mean()).multiply(0.02);
+// var land_surface_temp_mean_band = "LST_AVE_mean"
 
 // What you would do for stddev
 // var land_surface_temp_stdev_ds = land_surface_temp_ds.reduce(ee.Reducer.stdDev()).multiply(0.02);
 // var land_surface_temp_stdev_band = "LST_AVE_stdDev"
 
-compute_summary_stats_and_save_data(
-  fao_level_1,
-  land_surface_temp_ds,
-  land_surface_temp_band,
-  'land-surface-temp-zone-1-test'
-  )
+// compute_summary_stats_and_save_data(
+//   fao_level_1,
+//   land_surface_temp_ds,
+//   land_surface_temp_band,
+//   'land-surface-temp-zone-1-test'
+//   )
   
 
 
@@ -150,8 +150,10 @@ compute_summary_stats_and_save_data(
 //   'digital-elevation-data-test'
 // )
 
-// Elevation ----------------------------------------------------------------
-
+// Population Density ----------------------------------------------------------------
+var pop_density_ds = ee.ImageCollection("CIESIN/GPWv411/GPW_Population_Density")
+                .filterDate('2014-01-01', '2022-02-01')
+              
 
 
 // Plotting-------------------------------------
