@@ -156,36 +156,37 @@ var summarised_ds = fao_level_1.map(stats_per_region(
   land_surface_temp_ds, // dataset argument
   land_surface_temp_band // band argument
   ))
+  print(summarised_ds)
   
 
-var summaryImage = summarised_ds
-  .filter(ee.Filter.notNull(['elevation_mean']))
-  .reduceToImage({
-    properties: ['elevation_mean'],
-    reducer: ee.Reducer.first()
-});
+// var summaryImage = summarised_ds
+//   .filter(ee.Filter.notNull(['LST_AVE']))
+//   .reduceToImage({
+//     properties: ['LST_AVE'],
+//     reducer: ee.Reducer.first()
+// });
 
 
 
 
-// Create a schema for visualisation
-// remember to adjust min/,ax for the 
-// values you might expect for these data
-var visualization = {
-  min: 4000,
-  max: -10,
-  palette: [
-    "040274","040281","0502a3","0502b8","0502ce","0502e6",
-    "0602ff","235cb1","307ef3","269db1","30c8e2","32d3ef",
-    "3be285","3ff38f","86e26f","3ae237","b5e22e","d6e21f",
-    "fff705","ffd611","ffb613","ff8b13","ff6e08","ff500d",
-    "ff0000","de0101","c21301","a71001","911003",
-  ]
-};
+// // Create a schema for visualisation
+// // remember to adjust min/,ax for the 
+// // values you might expect for these data
+// var visualization = {
+//   min: 4000,
+//   max: -10,
+//   palette: [
+//     "040274","040281","0502a3","0502b8","0502ce","0502e6",
+//     "0602ff","235cb1","307ef3","269db1","30c8e2","32d3ef",
+//     "3be285","3ff38f","86e26f","3ae237","b5e22e","d6e21f",
+//     "fff705","ffd611","ffb613","ff8b13","ff6e08","ff500d",
+//     "ff0000","de0101","c21301","a71001","911003",
+//   ]
+// };
 
-Map.setCenter(25, 0, 3);
+// Map.setCenter(25, 0, 3);
 
-Map.addLayer(summaryImage, visualization, "Land Surface Temperature");
+// Map.addLayer(summaryImage, visualization, "Land Surface Temperature");
 
 
 
