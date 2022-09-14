@@ -18,7 +18,7 @@ var fao_level_2 = ee.FeatureCollection("FAO/GAUL/2015/level2");
 // var filter = ee.Filter.inList('ADM0_CODE', [ 257]) // Admin codes
 // var filter = ee.Filter.inList('ADM0_CODE', [42,79, 94, 133, 155, 182, 205, 257, 253]) // Admin codes
 
-var filter = ee.Filter.inList('ADM0_CODE', [ 85, 177, 255,42, 133]) // Admin codes
+var filter = ee.Filter.inList('ADM0_CODE', [ 85, 177, 255,42, 133, 175]) // Admin codes
 var fao_level_1 = fao_level_1.filter(filter);
 
 
@@ -134,13 +134,47 @@ var digital_elevation_ds = ee.Image("CGIAR/SRTM90_V4")
 
 var digital_elevation_band = 'elevation'
 
-compute_summary_stats_and_save_data(
-  fao_level_1,
-  digital_elevation_ds,
-  digital_elevation_band,
-  'digital-elevation-data-test'
-)
+// compute_summary_stats_and_save_data(
+//   fao_level_1,
+//   digital_elevation_ds,
+//   digital_elevation_band,
+//   'digital-elevation-data-test'
+// )
 
+var regional_elevation = fao_level_1.map(stats_per_region(
+  digital_elevation_ds,
+  digital_elevation_band
+  ))
+
+print(regional_elevation)
+
+
+var landAreaImg = regional_elevation
+  .filter(ee.Filter.notNull(['elevation_mean']))
+  .reduceToImage({
+    properties: ['elevation_mean'],
+    reducer: ee.Reducer.first()
+});
+
+
+
+
+// Create a schema for different temperatures
+var visualization = {
+  min: 4000,
+  max: -10,
+  palette: [
+    "040274","040281","0502a3","0502b8","0502ce","0502e6",
+    "0602ff","235cb1","307ef3","269db1","30c8e2","32d3ef",
+    "3be285","3ff38f","86e26f","3ae237","b5e22e","d6e21f",
+    "fff705","ffd611","ffb613","ff8b13","ff6e08","ff500d",
+    "ff0000","de0101","c21301","a71001","911003",
+  ]
+};
+
+Map.setCenter(25, 0, 3);
+
+Map.addLayer(landAreaImg, visualization, "Land Surface Temperature");
 
 
 
