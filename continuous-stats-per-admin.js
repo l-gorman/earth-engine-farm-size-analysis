@@ -118,21 +118,29 @@ var land_surface_temp_band = "LST_AVE"
 //   land_surface_temp_band
 //   ))
   
-compute_summary_stats_and_save_data(
-  fao_level_1,
-  land_surface_temp_ds,
-  land_surface_temp_band,
-  'land-surface-temp-zone-1-test'
-  )
+// compute_summary_stats_and_save_data(
+//   fao_level_1,
+//   land_surface_temp_ds,
+//   land_surface_temp_band,
+//   'land-surface-temp-zone-1-test'
+//   )
   
 // print(regional_land_surface_temp)
                 
 // print(dataset)
 
 
-var digital_elevation_ds = ee.ImageCollection("CGIAR/SRTM90_V4")
-                .filterDate('2001-01-01', '1999-02-01')
+var digital_elevation_ds = ee.Image("CGIAR/SRTM90_V4")
+
 var digital_elevation_band = 'elevation'
+
+compute_summary_stats_and_save_data(
+  fao_level_1,
+  digital_elevation_ds,
+  digital_elevation_band,
+  'digital-elevation-data-test'
+)
+
 
 
 
