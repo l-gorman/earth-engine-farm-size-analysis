@@ -27,28 +27,29 @@ var stats_per_region =function(
   ){
     var stats_per_feature = function(feature){
       
-      var reducer = ee.Reducer.mean().combine({
-      reducer2: ee.Reducer.stdDev(),
-      sharedInputs: true
-    }).combine({
-      reducer2: ee.Reducer.median(),
-      sharedInputs: true
-    }).combine({
-      reducer2: ee.Reducer.min(),
-      sharedInputs: true
-    }).combine({
-      reducer2: ee.Reducer.max(),
-      sharedInputs: true
-    }).combine({
-      reducer2: ee.Reducer.percentile([25]),
-      sharedInputs: true
-    }).combine({
-      reducer2: ee.Reducer.percentile([75]),
-      sharedInputs: true
-    }).combine({
-      reducer2: ee.Reducer.skew(),
-      sharedInputs: true
-    })
+      var reducer = ee.Reducer.mean()
+    //   .combine({
+    //   reducer2: ee.Reducer.stdDev(),
+    //   sharedInputs: true
+    // }).combine({
+    //   reducer2: ee.Reducer.median(),
+    //   sharedInputs: true
+    // }).combine({
+    //   reducer2: ee.Reducer.min(),
+    //   sharedInputs: true
+    // }).combine({
+    //   reducer2: ee.Reducer.max(),
+    //   sharedInputs: true
+    // }).combine({
+    //   reducer2: ee.Reducer.percentile([25]),
+    //   sharedInputs: true
+    // }).combine({
+    //   reducer2: ee.Reducer.percentile([75]),
+    //   sharedInputs: true
+    // }).combine({
+    //   reducer2: ee.Reducer.skew(),
+    //   sharedInputs: true
+    // })
       var image = dataset.select(band)
       var reduced_region = image.reduceRegion({
               reducer:reducer,
@@ -113,6 +114,8 @@ var land_surface_temp_ds = ee.ImageCollection("JAXA/GCOM-C/L3/LAND/LST/V2")
 var land_surface_temp_ds = land_surface_temp_ds.mean().multiply(0.02);
 // var land_surface_temp_25_ds = land_surface_temp_ds.reduce(ee.Reducer.percentile([25])).multiply(0.02);
 
+// print(land_surface_temp_ds)
+
 var land_surface_temp_band = "LST_AVE"
   
 // compute_summary_stats_and_save_data(
@@ -122,16 +125,6 @@ var land_surface_temp_band = "LST_AVE"
 //   'land-surface-temp-mean-zone-1'
 //   )
 
-// Quartile 25 Land Surface Temperature --------------------------------------------------------------
-
-
-// Multiply with slope coefficient
-// var land_surface_temp_25_ds = land_surface_temp_ds.reduce(ee.Reducer.percentile([25])).multiply(0.02);
-// var land_surface_temp_25_ds = land_surface_temp_ds.mean().multiply(0.02);
-
-// var land_surface_temp_25_band = "LST_AVE"
-
-// print(land_surface_temp_25_ds)
 
 // compute_summary_stats_and_save_data(
 //   fao_level_1,
