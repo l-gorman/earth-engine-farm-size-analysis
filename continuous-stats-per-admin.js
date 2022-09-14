@@ -113,11 +113,10 @@ var land_surface_temp_ds = ee.ImageCollection("JAXA/GCOM-C/L3/LAND/LST/V2")
 var land_surface_temp_ds = land_surface_temp_ds.mean().multiply(0.02);
 var land_surface_temp_band = "LST_AVE"
   
-var regional_land_surface_temp = fao_level_1.map(stats_per_region(
-  land_surface_temp_ds,
-  land_surface_temp_band
-  ))
-  
+// var regional_land_surface_temp = fao_level_1.map(stats_per_region(
+//   land_surface_temp_ds,
+//   land_surface_temp_band
+//   ))
   
 compute_summary_stats_and_save_data(
   fao_level_1,
