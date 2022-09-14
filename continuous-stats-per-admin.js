@@ -61,7 +61,7 @@ var stats_per_region =function(
       var reduced_region = image.reduceRegion({
               reducer:reducer,
               geometry:feature.geometry(),
-              scale:500,
+              scale:1000,
               maxPixels:1e9
           })
           
@@ -115,29 +115,33 @@ var compute_summary_stats_and_save_data = function(
 // Preparing datasets ----------------------------------------------------------------
 // ----------------------------------------------------------------
 
+
+// Land Surface Temp ----------------------------------------------------------------
 var land_surface_temp_ds = ee.ImageCollection("JAXA/GCOM-C/L3/LAND/LST/V2")
                 .filterDate('2014-01-01', '2022-02-01')
                 // filter to daytime data only
                 .filter(ee.Filter.eq("SATELLITE_DIRECTION", "D"));
 // Multiply with slope coefficient
 var land_surface_temp_mean_ds = land_surface_temp_ds.reduce(ee.Reducer.mean()).multiply(0.02);
-var land_surface_temp_band = "LST_AVE_mean"
+var land_surface_temp_mean_band = "LST_AVE_mean"
 
+// What you would do for stddev
+// var land_surface_temp_stdev_ds = land_surface_temp_ds.reduce(ee.Reducer.stdDev()).multiply(0.02);
+// var land_surface_temp_stdev_band = "LST_AVE_stdDev"
 
+compute_summary_stats_and_save_data(
+  fao_level_1,
+  land_surface_temp_ds,
+  land_surface_temp_band,
+  'land-surface-temp-zone-1-test'
+  )
   
-// compute_summary_stats_and_save_data(
-//   fao_level_1,
-//   land_surface_temp_ds,
-//   land_surface_temp_band,
-//   'land-surface-temp-zone-1-test'
-//   )
-  
 
 
+// Elevation ----------------------------------------------------------------
 
-var digital_elevation_ds = ee.Image("CGIAR/SRTM90_V4")
-
-var digital_elevation_band = 'elevation'
+// var digital_elevation_ds = ee.Image("CGIAR/SRTM90_V4")
+// var digital_elevation_band = 'elevation'
 
 // compute_summary_stats_and_save_data(
 //   fao_level_1,
@@ -146,21 +150,26 @@ var digital_elevation_band = 'elevation'
 //   'digital-elevation-data-test'
 // )
 
+// Elevation ----------------------------------------------------------------
+
+
 
 // Plotting-------------------------------------
 
 
 var regional_land_surface_temp = fao_level_1.map(stats_per_region(
-  land_surface_temp_mean_ds,
-  land_surface_temp_band
+  land_surface_temp_stdev_ds,
+  land_surface_temp_stdev_band
   ))
+  
+print(regional_land_surface_temp)
   
 // print(regional_land_surface_temp)
 
 var landAreaImg = regional_land_surface_temp
-  .filter(ee.Filter.notNull([land_surface_temp_band + '_mean']))
+  .filter(ee.Filter.notNull([land_surface_temp_stdev_band + '_mean']))
   .reduceToImage({
-    properties: [land_surface_temp_band + '_mean'],
+    properties: [land_surface_temp_stdev_band + '_mean'],
     reducer: ee.Reducer.first()
 });
 
