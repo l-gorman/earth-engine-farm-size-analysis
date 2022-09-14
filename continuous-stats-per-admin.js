@@ -24,7 +24,7 @@ var filter = ee.Filter.inList('ADM0_CODE', [ 85, 177, 255,42, 133]) // Admin cod
 
 // Filtering
 var fao_level_1 = fao_level_1.filter(filter);
-// var fao_level_2 = fao_level_2.filter(filter);
+var fao_level_2 = fao_level_2.filter(filter);
 
 // ----------------------------------------------------------------
 // Functions ----------------------------------------------------------------
@@ -117,38 +117,38 @@ var compute_summary_stats_and_save_data = function(
 
 
 // Land Surface Temp ----------------------------------------------------------------
-// var land_surface_temp_ds = ee.ImageCollection("JAXA/GCOM-C/L3/LAND/LST/V2")
-//                 .filterDate('2014-01-01', '2022-02-01')
-//                 // filter to daytime data only
-//                 .filter(ee.Filter.eq("SATELLITE_DIRECTION", "D"));
+var land_surface_temp_ds = ee.ImageCollection("JAXA/GCOM-C/L3/LAND/LST/V2")
+                .filterDate('2014-01-01', '2022-02-01')
+                // filter to daytime data only
+                .filter(ee.Filter.eq("SATELLITE_DIRECTION", "D"));
 // Multiply with slope coefficient
-// var land_surface_temp_mean_ds = land_surface_temp_ds.reduce(ee.Reducer.mean()).multiply(0.02);
-// var land_surface_temp_mean_band = "LST_AVE_mean"
+var land_surface_temp_mean_ds = land_surface_temp_ds.reduce(ee.Reducer.mean()).multiply(0.02);
+var land_surface_temp_mean_band = "LST_AVE_mean"
 
 // What you would do for stddev
 // var land_surface_temp_stdev_ds = land_surface_temp_ds.reduce(ee.Reducer.stdDev()).multiply(0.02);
 // var land_surface_temp_stdev_band = "LST_AVE_stdDev"
 
-// compute_summary_stats_and_save_data(
-//   fao_level_1,
-//   land_surface_temp_ds,
-//   land_surface_temp_band,
-//   'land-surface-temp-zone-1-test'
-//   )
+compute_summary_stats_and_save_data(
+  fao_level_2,
+  land_surface_temp_ds,
+  land_surface_temp_band,
+  'land-surface-temp-zone-2'
+  )
   
 
 
 // Elevation ----------------------------------------------------------------
 
-// var digital_elevation_ds = ee.Image("CGIAR/SRTM90_V4")
-// var digital_elevation_band = 'elevation'
+var digital_elevation_ds = ee.Image("CGIAR/SRTM90_V4")
+var digital_elevation_band = 'elevation'
 
-// compute_summary_stats_and_save_data(
-//   fao_level_1,
-//   digital_elevation_ds,
-//   digital_elevation_band,
-//   'digital-elevation-data-test'
-// )
+compute_summary_stats_and_save_data(
+  fao_level_2,
+  digital_elevation_ds,
+  digital_elevation_band,
+  'digital-elevation-zone-2'
+)
 
 // Population Density ----------------------------------------------------------------
 var pop_density_ds = ee.ImageCollection("CIESIN/GPWv411/GPW_Population_Density")
@@ -156,45 +156,104 @@ var pop_density_ds = ee.ImageCollection("CIESIN/GPWv411/GPW_Population_Density")
 var pop_density_mean_ds = pop_density_ds.reduce(ee.Reducer.mean());
 var pop_density_mean_band = "population_density_mean"           
 
+compute_summary_stats_and_save_data(
+  fao_level_2,
+  pop_density_mean_ds,
+  pop_density_mean_band,
+  'population-density-zone-2'
+)
+
+
+// Topographic Diversity ----------------------------------------------------------------
+var topographic_diversity_ds = ee.Image("CSP/ERGo/1_0/Global/ALOS_topoDiversity")
+var topographic_diversity_band = 'constant'
+
+compute_summary_stats_and_save_data(
+  fao_level_2,
+  topographic_diversity_ds,
+  topographic_diversity_band,
+  'topographic-diversity-zone-2'
+)
+
+// NDVI ----------------------------------------------------------------
+
+var ndvi_ds = ee.ImageCollection("MODIS/061/MOD13A1")
+                .filterDate('2014-01-01', '2022-02-01')
+var ndvi_mean_ds = ndvi_ds.reduce(ee.Reducer.mean());
+var ndvi_mean_band = "NDVI_mean"           
+
+
+compute_summary_stats_and_save_data(
+  fao_level_2,
+  ndvi_mean_ds,
+  ndvi_mean_band,
+  'ndvi-zone-2'
+  )
+
+
+// Night Lights ----------------------------------------------------------------
+
+var night_light_ds = ee.ImageCollection("BNU/FGS/CCNL/v1")
+                .filterDate('2010-01-01', '2010-12-31')
+var night_light_mean_ds = night_light_ds.reduce(ee.Reducer.mean());
+var night_light_mean_band = "b1_mean"      
+
+compute_summary_stats_and_save_data(
+  fao_level_2,
+  night_light_mean_ds,
+  night_light_mean_band,
+  'night-time-light-mean-zone-2'
+)
+
+// Travel time to healthcare ----------------------------------------------------------------
+
+var travel_time_to_health_ds = ee.Image("Oxford/MAP/accessibility_to_healthcare_2019")
+var travel_time_to_health_ds_band = 'accessibility'
+
+compute_summary_stats_and_save_data(
+  fao_level_2,
+  travel_time_to_health_ds,
+  travel_time_to_health_ds_band,
+  'travel-time-to-health-zone-2'
+)
 
 // Plotting-------------------------------------
 
 
-var regional_stats = fao_level_1.map(stats_per_region(
-  pop_density_mean_ds,
-  pop_density_mean_band
-  ))
+// var regional_stats = fao_level_1.map(stats_per_region(
+//   travel_time_to_health_ds,
+//   travel_time_to_health_ds_band
+//   ))
   
-print(regional_land_surface_temp)
+// print(regional_stats)
   
-// print(regional_land_surface_temp)
+// // print(regional_land_surface_temp)
 
-var landAreaImg = regional_land_surface_temp
-  .filter(ee.Filter.notNull([pop_density_mean_band + '_mean']))
-  .reduceToImage({
-    properties: [pop_density_mean_band + '_mean'],
-    reducer: ee.Reducer.first()
-});
-
-
+// var landAreaImg = regional_stats
+//   .filter(ee.Filter.notNull([travel_time_to_health_ds_band + '_mean']))
+//   .reduceToImage({
+//     properties: [travel_time_to_health_ds_band + '_mean'],
+//     reducer: ee.Reducer.first()
+// });
 
 
-// // Create a schema for different temperatures
-var visualization = {
-  min: 0,
-  max: 1000,
-  palette: [
-    "040274","040281","0502a3","0502b8","0502ce","0502e6",
-    "0602ff","235cb1","307ef3","269db1","30c8e2","32d3ef",
-    "3be285","3ff38f","86e26f","3ae237","b5e22e","d6e21f",
-    "fff705","ffd611","ffb613","ff8b13","ff6e08","ff500d",
-    "ff0000","de0101","c21301","a71001","911003",
-  ]
-};
 
-Map.setCenter(25, 0, 3);
+// // // Create a schema for different temperatures
+// var visualization = {
+//   min: 0.0,
+//   max: 100,
+//   palette: [
+//     "040274","040281","0502a3","0502b8","0502ce","0502e6",
+//     "0602ff","235cb1","307ef3","269db1","30c8e2","32d3ef",
+//     "3be285","3ff38f","86e26f","3ae237","b5e22e","d6e21f",
+//     "fff705","ffd611","ffb613","ff8b13","ff6e08","ff500d",
+//     "ff0000","de0101","c21301","a71001","911003",
+//   ]
+// };
 
-Map.addLayer(landAreaImg, visualization, "Summary Stats per region");
+// Map.setCenter(25, 0, 3);
+
+// Map.addLayer(landAreaImg, visualization, "Summary Stats per region");
 
 
 
