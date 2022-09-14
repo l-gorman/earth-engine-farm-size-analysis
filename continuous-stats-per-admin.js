@@ -132,7 +132,9 @@ var land_surface_temp_ds = ee.ImageCollection("JAXA/GCOM-C/L3/LAND/LST/V2")
                 .filter(ee.Filter.eq("SATELLITE_DIRECTION", "D"));
 // Multiply with slope coefficient
 var land_surface_temp_25_ds = land_surface_temp_ds.reduce(ee.Reducer.percentile([25])).multiply(0.02);
-var land_surface_temp_25_band = "LST_AVE"
+var land_surface_temp_25_ds = land_surface_temp_ds.mean().multiply(0.02);
+
+// var land_surface_temp_25_band = "LST_AVE"
 
 print(land_surface_temp_25_ds)
 
