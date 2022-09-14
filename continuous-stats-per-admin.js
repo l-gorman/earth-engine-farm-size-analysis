@@ -110,7 +110,7 @@ var land_surface_temp_ds = ee.ImageCollection("JAXA/GCOM-C/L3/LAND/LST/V2")
                 // filter to daytime data only
                 .filter(ee.Filter.eq("SATELLITE_DIRECTION", "D"));
 // Multiply with slope coefficient
-var land_surface_temp_mean_ds = land_surface_temp_ds.mean().multiply(0.02);
+var land_surface_temp_ds = land_surface_temp_ds.mean().multiply(0.02);
 // var land_surface_temp_25_ds = land_surface_temp_ds.reduce(ee.Reducer.percentile([25])).multiply(0.02);
 
 var land_surface_temp_band = "LST_AVE"
@@ -160,7 +160,7 @@ var land_surface_temp_band = "LST_AVE"
 
 // Printing to map --------------------------------------------------------------
 var summarised_ds = fao_level_1.map(stats_per_region(
-  land_surface_temp_mean_ds, // dataset argument
+  land_surface_temp_ds, // dataset argument
   land_surface_temp_band // band argument
   ))
   
