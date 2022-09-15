@@ -118,12 +118,12 @@ var compute_summary_stats_and_save_data = function(
 
 // Land Surface Temp ----------------------------------------------------------------
 var land_surface_temp_ds = ee.ImageCollection("JAXA/GCOM-C/L3/LAND/LST/V2")
-                .filterDate('2016-01-01', '2021-02-01')
+                .filterDate('2018-01-01', '2021-02-01')
                 // filter to daytime data only
                 .filter(ee.Filter.eq("SATELLITE_DIRECTION", "D"));
 // Multiply with slope coefficient
-var land_surface_temp_mean_ds = land_surface_temp_ds.reduce(ee.Reducer.mean()).multiply(0.02);
-var land_surface_temp_mean_band = "LST_AVE_mean"
+var land_surface_temp_mean_ds = land_surface_temp_ds.mean().multiply(0.02);
+var land_surface_temp_mean_band = "LST_AVE"
 
 // What you would do for stddev
 // var land_surface_temp_stdev_ds = land_surface_temp_ds.reduce(ee.Reducer.stdDev()).multiply(0.02);
