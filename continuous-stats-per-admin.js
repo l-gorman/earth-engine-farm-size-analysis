@@ -118,7 +118,7 @@ var compute_summary_stats_and_save_data = function(
 
 // Land Surface Temp ----------------------------------------------------------------
 var land_surface_temp_ds = ee.ImageCollection("JAXA/GCOM-C/L3/LAND/LST/V2")
-                .filterDate('2014-01-01', '2022-02-01')
+                .filterDate('2016-01-01', '2021-02-01')
                 // filter to daytime data only
                 .filter(ee.Filter.eq("SATELLITE_DIRECTION", "D"));
 // Multiply with slope coefficient
@@ -143,12 +143,12 @@ compute_summary_stats_and_save_data(
 var digital_elevation_ds = ee.Image("CGIAR/SRTM90_V4")
 var digital_elevation_band = 'elevation'
 
-compute_summary_stats_and_save_data(
-  fao_level_2,
-  digital_elevation_ds,
-  digital_elevation_band,
-  'digital-elevation-zone-2'
-)
+// compute_summary_stats_and_save_data(
+//   fao_level_2,
+//   digital_elevation_ds,
+//   digital_elevation_band,
+//   'digital-elevation-zone-2'
+// )
 
 // Population Density ----------------------------------------------------------------
 var pop_density_ds = ee.ImageCollection("CIESIN/GPWv411/GPW_Population_Density")
@@ -156,24 +156,24 @@ var pop_density_ds = ee.ImageCollection("CIESIN/GPWv411/GPW_Population_Density")
 var pop_density_mean_ds = pop_density_ds.reduce(ee.Reducer.mean());
 var pop_density_mean_band = "population_density_mean"           
 
-compute_summary_stats_and_save_data(
-  fao_level_2,
-  pop_density_mean_ds,
-  pop_density_mean_band,
-  'population-density-zone-2'
-)
+// compute_summary_stats_and_save_data(
+//   fao_level_2,
+//   pop_density_mean_ds,
+//   pop_density_mean_band,
+//   'population-density-zone-2'
+// )
 
 
 // Topographic Diversity ----------------------------------------------------------------
 var topographic_diversity_ds = ee.Image("CSP/ERGo/1_0/Global/ALOS_topoDiversity")
 var topographic_diversity_band = 'constant'
 
-compute_summary_stats_and_save_data(
-  fao_level_2,
-  topographic_diversity_ds,
-  topographic_diversity_band,
-  'topographic-diversity-zone-2'
-)
+// compute_summary_stats_and_save_data(
+//   fao_level_2,
+//   topographic_diversity_ds,
+//   topographic_diversity_band,
+//   'topographic-diversity-zone-2'
+// )
 
 // NDVI ----------------------------------------------------------------
 
@@ -198,24 +198,24 @@ var night_light_ds = ee.ImageCollection("BNU/FGS/CCNL/v1")
 var night_light_mean_ds = night_light_ds.reduce(ee.Reducer.mean());
 var night_light_mean_band = "b1_mean"      
 
-compute_summary_stats_and_save_data(
-  fao_level_2,
-  night_light_mean_ds,
-  night_light_mean_band,
-  'night-time-light-mean-zone-2'
-)
+// compute_summary_stats_and_save_data(
+//   fao_level_2,
+//   night_light_mean_ds,
+//   night_light_mean_band,
+//   'night-time-light-mean-zone-2'
+// )
 
 // Travel time to healthcare ----------------------------------------------------------------
 
 var travel_time_to_health_ds = ee.Image("Oxford/MAP/accessibility_to_healthcare_2019")
 var travel_time_to_health_ds_band = 'accessibility'
 
-compute_summary_stats_and_save_data(
-  fao_level_2,
-  travel_time_to_health_ds,
-  travel_time_to_health_ds_band,
-  'travel-time-to-health-zone-2'
-)
+// compute_summary_stats_and_save_data(
+//   fao_level_2,
+//   travel_time_to_health_ds,
+//   travel_time_to_health_ds_band,
+//   'travel-time-to-health-zone-2'
+// )
 
 // Plotting-------------------------------------
 
