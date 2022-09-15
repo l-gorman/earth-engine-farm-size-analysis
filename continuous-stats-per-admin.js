@@ -183,12 +183,12 @@ var ndvi_mean_ds = ndvi_ds.reduce(ee.Reducer.mean());
 var ndvi_mean_band = "NDVI_mean"           
 
 
-compute_summary_stats_and_save_data(
-  fao_level_2,
-  ndvi_mean_ds,
-  ndvi_mean_band,
-  'ndvi-zone-2'
-  )
+// compute_summary_stats_and_save_data(
+//   fao_level_2,
+//   ndvi_mean_ds,
+//   ndvi_mean_band,
+//   'ndvi-zone-2'
+//   )
 
 
 // Night Lights ----------------------------------------------------------------
