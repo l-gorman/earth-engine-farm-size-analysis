@@ -49,19 +49,18 @@ print(fao_level_1_fc)
 Export.table.toDrive({
   collection: fao_level_1_fc,
   description:'fao-level-1-details',
-  fileFormat: 'csv',
+  fileFormat: 'GeoJSON',
   folder: 'earth-engine-outputs/farm-size-analysis',
-  fileNamePrefix: 'fao-gaul-level-2'
+  fileNamePrefix: 'fao-gaul-level-1'
   
 });
 
 Export.table.toDrive({
   collection: fao_level_2_fc,
   description:'fao-level-2-details',
-  fileFormat: 'csv',
+  fileFormat: 'GeoJSON',
   folder: 'earth-engine-outputs/farm-size-analysis',
-  fileNamePrefix: 'fao-gaul-level-1'
-
+  fileNamePrefix: 'fao-gaul-level-2'
 });
 
 
