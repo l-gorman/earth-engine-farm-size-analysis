@@ -1,11 +1,8 @@
-/**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var table = ee.FeatureCollection("projects/lgorman/assets/farm-size-all-points");
-/***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Getting point estimates
 
 
 // Farm Size Points from LSMS
-var farm_size_points = ee.FeatureCollection("projects/lgorman/assets/farm-size-all-points");
+var farm_size_points = ee.FeatureCollection("projects/lgorman/assets/farm-size-lsms-all");
 
 // Administrative Units in LSMS
 var fao_level_1 = ee.FeatureCollection("FAO/GAUL/2015/level1"); 
@@ -81,6 +78,13 @@ get_point_estimate(
 // Topographic Diversity
 var topographic_diversity_ds = ee.Image("CSP/ERGo/1_0/Global/ALOS_topoDiversity")
                 .select('constant')
+get_point_estimate(
+  {
+    feature_collection:farm_size_points,
+    image:topographic_diversity_ds,
+    file_name:"topographic-diversity-lsms",
+    scale: 927.67
+  })
 
 // Land Cover Class
 var land_cover_class = ee.ImageCollection('MODIS/006/MCD12Q1')
