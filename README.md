@@ -22,6 +22,8 @@
 * Rwanda - 205
 * Tanzania - 257
 * Uganda - 253
+* Malawi - 152
+* Niger - 181
 
 
 
