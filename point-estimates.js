@@ -17,7 +17,7 @@ var get_point_estimate = function(props){
   var pointData = props.image.reduceRegions({
   collection: props.feature_collection,
   reducer: ee.Reducer.first(),
-  scale=props.scale
+  scale:props.scale
 });
 
  Export.table.toDrive({
