@@ -52,8 +52,8 @@ var land_cover_mode_ds = night_light_ds.reduce(ee.Reducer.mode());
 print(farm_size_points[1])
 
 
-var poinData = mosaic.reduceRegions({
-  collection: night_light_mean_ds,
+var poinData = land_cover_band.reduceRegions({
+  collection: farm_size_points,
   reducer: ee.Reducer.first(),
   scale: 30
 });
