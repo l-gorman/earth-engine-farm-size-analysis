@@ -203,7 +203,7 @@ var night_light_mean_band = "b1_mean"
 //   night_light_mean_ds,
 //   night_light_mean_band,
 //   'night-time-light-mean-zone-2'
-// )
+// )b
 
 // Travel time to healthcare ----------------------------------------------------------------
 
