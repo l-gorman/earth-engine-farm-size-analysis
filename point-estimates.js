@@ -46,7 +46,7 @@ get_point_estimate(
     feature_collection:farm_size_points,
     image:pop_density_mean_band,
     description:"population density point estimates",
-    file_name:"population-density-lsms.csv"
+    file_name:"population-density-lsms"
     
   })
 
