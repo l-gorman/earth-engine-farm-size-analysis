@@ -53,13 +53,25 @@ get_point_estimate(
 // Accessibility to Healthcare
 var travel_time_to_health_ds = ee.Image("Oxford/MAP/accessibility_to_healthcare_2019")
 var travel_time_to_health_ds_band = 'accessibility'
-
+get_point_estimate(
+  {
+    feature_collection:farm_size_points,
+    image:travel_time_to_health_ds,
+    file_name:"travel-time-lsms",
+    scale: 927.67
+  })
 // Night Lights
 var night_light_ds = ee.ImageCollection("BNU/FGS/CCNL/v1")
                 .filterDate('2010-01-01', '2010-12-31')
 var night_light_mean_ds = night_light_ds.reduce(ee.Reducer.mean());
 var night_light_mean_band = "b1_mean"      
-
+get_point_estimate(
+  {
+    feature_collection:farm_size_points,
+    image:pop_density_mean_ds,
+    file_name:"population-density-lsms",
+    scale: 927.67
+  })
 // Topographic Diversity
 var topographic_diversity_ds = ee.Image("CSP/ERGo/1_0/Global/ALOS_topoDiversity")
 var topographic_diversity_band = 'constant'
@@ -68,7 +80,13 @@ var topographic_diversity_band = 'constant'
 var land_cover_class = ee.ImageCollection('MODIS/006/MCD12Q1')
 var land_cover_band =  "LC_Type1"
 var land_cover_mode_ds = night_light_ds.reduce(ee.Reducer.mode());
-
+get_point_estimate(
+  {
+    feature_collection:farm_size_points,
+    image:pop_density_mean_ds,
+    file_name:"population-density-lsms",
+    scale: 927.67
+  })
 
 
 
