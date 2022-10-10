@@ -59,13 +59,12 @@ var pointData = land_cover_mode_ds.reduceRegions({
 
  Export.table.toDrive({
     collection: pointData,
-    description:'Point estimate test',
+    description:'point-estimate-test',
     fileFormat: 'csv',
     folder: 'earth-engine-outputs/farm-size-analysis/point-estimate-test',
     fileNamePrefix: 'point-estimate-test'
     })
 
-print(pointData)
 
 // Map.addLayer( farm_size_points,  
 // {'color': 'black'},
