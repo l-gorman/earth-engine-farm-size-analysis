@@ -80,13 +80,12 @@ get_point_estimate(
   })
 // Topographic Diversity
 var topographic_diversity_ds = ee.Image("CSP/ERGo/1_0/Global/ALOS_topoDiversity")
-var night_light_ds = night_light_ds.reduceToImage({
-     properties:'b1'
-})
-var topographic_diversity_band = 'constant'
+                .select('constant')
 
 // Land Cover Class
 var land_cover_class = ee.ImageCollection('MODIS/006/MCD12Q1')
+                .filterDate(start_date, end_date)
+                .select('LC_Type1')
 var land_cover_band =  "LC_Type1"
 var land_cover_mode_ds = night_light_ds.reduce(ee.Reducer.mode());
 get_point_estimate(
