@@ -13,7 +13,19 @@ var fao_level_2 = ee.FeatureCollection("FAO/GAUL/2015/level2");
 
 
 
-var get_point_estimate = function(image){
+var get_point_estimate = function(props){
+  var pointData = props.image.reduceRegions({
+  collection: props.feature_collection,
+  reducer: ee.Reducer.first(),
+});
+
+ Export.table.toDrive({
+    collection: pointData,
+    description:props.description,
+    fileFormat: 'csv',
+    folder: 'earth-engine-outputs/farm-size-analysis/',
+    fileNamePrefix: props.filename
+    })
   
 }
 
@@ -28,7 +40,15 @@ var end_date = '2022-02-01'
 var pop_density_ds = ee.ImageCollection("CIESIN/GPWv411/GPW_Population_Density")
                 .filterDate('2014-01-01', '2022-02-01')
 var pop_density_mean_ds = pop_density_ds.reduce(ee.Reducer.mean());
-var pop_density_mean_band = "population_density_mean"  
+
+get_point_estimate(
+  {
+    feature_collection:farm_size_points,
+    image:pop_density_mean_band,
+    description:"population density point estimates",
+    file_name:"population-density-lsms.csv"
+    
+  })
 
 // Accessibility to Healthcare
 var travel_time_to_health_ds = ee.Image("Oxford/MAP/accessibility_to_healthcare_2019")
@@ -51,19 +71,7 @@ var land_cover_mode_ds = night_light_ds.reduce(ee.Reducer.mode());
 
 
 
-var pointData = land_cover_mode_ds.reduceRegions({
-  collection: farm_size_points,
-  reducer: ee.Reducer.first(),
-  scale: 30
-});
 
- Export.table.toDrive({
-    collection: pointData,
-    description:'point-estimate-test',
-    fileFormat: 'csv',
-    folder: 'earth-engine-outputs/farm-size-analysis/point-estimate-test',
-    fileNamePrefix: 'point-estimate-test'
-    })
 
 
 // Map.addLayer( farm_size_points,  
