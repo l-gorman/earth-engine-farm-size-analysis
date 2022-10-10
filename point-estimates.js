@@ -82,8 +82,8 @@ var land_cover_mode_ds = night_light_ds.reduce(ee.Reducer.mode());
 get_point_estimate(
   {
     feature_collection:farm_size_points,
-    image:pop_density_mean_ds,
-    file_name:"population-density-lsms",
+    image:land_cover_mode_ds,
+    file_name:"land-cover-lsms",
     scale: 927.67
   })
 
