@@ -5,5 +5,11 @@ var table = ee.FeatureCollection("projects/lgorman/assets/farm-size-all-points")
 
 var farm_size_points = ee.FeatureCollection("projects/lgorman/assets/farm-size-all-points");
 
-Map.adLayer( farm_size_points,  {'color': 'black'},
-             'Geometry [black]: point'))
+print(farm_size_points[1])
+
+// Map.addLayer( farm_size_points,  
+// {'color': 'black'},
+             
+//             'Geometry [black]: point')
+             
+             
