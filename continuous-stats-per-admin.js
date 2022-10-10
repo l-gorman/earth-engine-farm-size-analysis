@@ -19,7 +19,7 @@ var fao_level_2 = ee.FeatureCollection("FAO/GAUL/2015/level2");
 // var filter = ee.Filter.eq('ADM1_CODE', 1927); //2579
 // var filter = ee.Filter.inList('ADM0_CODE', [ 257]) // Admin codes
 // var filter = ee.Filter.inList('ADM0_CODE', [42,79, 94, 133, 155, 182, 205, 257, 253]) // Admin codes
-var filter = ee.Filter.inList('ADM0_CODE', [42,79, 94, 133, 155, 182, 205, 257, 253]) // Admin codes
+var filter = ee.Filter.inList('ADM0_CODE', [42,79, 94, 133, 155, 182, 205, 257, 253, 152,181]) // Admin codes
 
 
 // Filtering
