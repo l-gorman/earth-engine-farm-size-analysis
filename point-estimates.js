@@ -17,11 +17,12 @@ var get_point_estimate = function(props){
   var pointData = props.image.reduceRegions({
   collection: props.feature_collection,
   reducer: ee.Reducer.first(),
+  scale=props.scale
 });
 
  Export.table.toDrive({
     collection: pointData,
-    description:props.description,
+    description:props.file_name,
     fileFormat: 'csv',
     folder: 'earth-engine-outputs/farm-size-analysis/',
     fileNamePrefix: props.filename
@@ -45,9 +46,8 @@ get_point_estimate(
   {
     feature_collection:farm_size_points,
     image:pop_density_mean_ds,
-    description:"population density point estimates",
-    file_name:"population-density-lsms"
-    
+    file_name:"population-density-lsms",
+    scale: 927.67
   })
 
 // Accessibility to Healthcare
