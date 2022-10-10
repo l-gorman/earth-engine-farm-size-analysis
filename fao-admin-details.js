@@ -13,7 +13,7 @@ countries in SSA of interest
 var fao_level_1_fc = ee.FeatureCollection("FAO/GAUL/2015/level1"); 
 var fao_level_2_fc = ee.FeatureCollection("FAO/GAUL/2015/level2");
 
-var filter = ee.Filter.inList('ADM0_CODE', [42,79, 94, 133, 155, 182, 205, 257, 253]) // Admin codes
+var filter = ee.Filter.inList('ADM0_CODE', [42,79, 94, 133, 155, 182, 205, 257, 253, 152,181]) // Admin codes
 
 
 var fao_level_1_fc = fao_level_1_fc.filter(filter);
