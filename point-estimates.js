@@ -13,7 +13,7 @@ var fao_level_2 = ee.FeatureCollection("FAO/GAUL/2015/level2");
 
 
 
-var get_point_estimate = function(){
+var get_point_estimate = function(image){
   
 }
 
@@ -50,6 +50,15 @@ var land_cover_band =  "LC_Type1"
 var land_cover_mode_ds = night_light_ds.reduce(ee.Reducer.mode());
 
 print(farm_size_points[1])
+
+
+var poinData = mosaic.reduceRegions({
+  collection: night_light_mean_ds,
+  reducer: ee.Reducer.first(),
+  scale: 30
+});
+
+print()
 
 // Map.addLayer( farm_size_points,  
 // {'color': 'black'},
