@@ -64,12 +64,11 @@ get_point_estimate(
 var night_light_ds = ee.ImageCollection("BNU/FGS/CCNL/v1")
                 .filterDate('2010-01-01', '2010-12-31')
 var night_light_mean_ds = night_light_ds.reduce(ee.Reducer.mean());
-var night_light_mean_band = "b1_mean"      
 get_point_estimate(
   {
     feature_collection:farm_size_points,
-    image:pop_density_mean_ds,
-    file_name:"population-density-lsms",
+    image:night_light_mean_ds,
+    file_name:"night-time-light-lsms",
     scale: 927.67
   })
 // Topographic Diversity
