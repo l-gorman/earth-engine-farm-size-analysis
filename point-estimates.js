@@ -49,16 +49,15 @@ var land_cover_class = ee.ImageCollection('MODIS/006/MCD12Q1')
 var land_cover_band =  "LC_Type1"
 var land_cover_mode_ds = night_light_ds.reduce(ee.Reducer.mode());
 
-print(farm_size_points[1])
 
 
-var poinData = land_cover_band.reduceRegions({
+var pointData = land_cover_mode_ds.reduceRegions({
   collection: farm_size_points,
   reducer: ee.Reducer.first(),
   scale: 30
 });
 
-print()
+print(pointData)
 
 // Map.addLayer( farm_size_points,  
 // {'color': 'black'},
