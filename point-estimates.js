@@ -4,9 +4,6 @@
 // Farm Size Points from LSMS
 var farm_size_points = ee.FeatureCollection("projects/lgorman/assets/farm-size-lsms-all");
 
-// Administrative Units in LSMS
-var fao_level_1 = ee.FeatureCollection("FAO/GAUL/2015/level1"); 
-var fao_level_2 = ee.FeatureCollection("FAO/GAUL/2015/level2");
 
 
 
@@ -21,7 +18,7 @@ var get_point_estimate = function(props){
     collection: pointData,
     description:props.file_name,
     fileFormat: 'csv',
-    folder: 'earth-engine-outputs/farm-size-analysis/',
+    folder: 'earth-engine-outputs/farm-size-analysis',
     fileNamePrefix: props.filename
     })
   
