@@ -129,12 +129,12 @@ var land_surface_temp_mean_band = "LST_AVE"
 // var land_surface_temp_stdev_ds = land_surface_temp_ds.reduce(ee.Reducer.stdDev()).multiply(0.02);
 // var land_surface_temp_stdev_band = "LST_AVE_stdDev"
 
-compute_summary_stats_and_save_data(
-  fao_level_2,
-  land_surface_temp_mean_ds,
-  land_surface_temp_mean_band,
-  'land-surface-temp-zone-2'
-  )
+// compute_summary_stats_and_save_data(
+//   fao_level_2,
+//   land_surface_temp_mean_ds,
+//   land_surface_temp_mean_band,
+//   'land-surface-temp-zone-2'
+//   )
   
 
 
